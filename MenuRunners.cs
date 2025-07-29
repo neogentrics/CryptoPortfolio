@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
+
 /// <summary>
 /// Contains the runner methods for each cipher option in the main menu.
 /// </summary>

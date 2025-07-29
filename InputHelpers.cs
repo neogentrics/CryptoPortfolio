@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
+
 /// <summary>
 /// Provides helper methods for getting validated user input from the console.
 /// </summary>
@@ -46,6 +47,7 @@ public static class InputHelpers
     public static string GetStringKey(string prompt)
     {
         Console.Write(prompt);
+        // This fixes the nullability warnings project-wide.
         return Console.ReadLine() ?? "";
     }
 }

@@ -42,7 +42,7 @@ public class Program
                 case "11": MenuRunners.RunBifidCipher(); break;
                 case "12": MenuRunners.RunHillCipher(); break;
                 case "13": MenuRunners.RunEnigmaMachine(); break;
-                case "14": DiffieHellmanKeyExchange.RunExchange(); break;
+                case "14": DiffieHellmanKeyExchange.RunExchange(); break; // Corrected call
                 case "15": MenuRunners.ShowCipherHistory(); break;
                 case "16": Console.WriteLine("Exiting program. Goodbye!"); return;
                 default: Console.WriteLine("Invalid choice."); break;

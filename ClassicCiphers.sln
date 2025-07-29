@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36301.6 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassicCiphers", "ClassicCiphers.csproj", "{277C422E-B622-4E92-B3D7-C941F3ED0821}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoPortfolio.Console", "CryptoPortfolio.Console.csproj", "{277C422E-B622-4E92-B3D7-C941F3ED0821}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E873BB46-74C8-4B53-84E3-AF4786129571} = {E873BB46-74C8-4B53-84E3-AF4786129571}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoPortfolio.Core", "..\CryptoPortfolio.Core\CryptoPortfolio.Core.csproj", "{E873BB46-74C8-4B53-84E3-AF4786129571}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{277C422E-B622-4E92-B3D7-C941F3ED0821}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{277C422E-B622-4E92-B3D7-C941F3ED0821}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{277C422E-B622-4E92-B3D7-C941F3ED0821}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E873BB46-74C8-4B53-84E3-AF4786129571}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E873BB46-74C8-4B53-84E3-AF4786129571}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E873BB46-74C8-4B53-84E3-AF4786129571}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E873BB46-74C8-4B53-84E3-AF4786129571}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
