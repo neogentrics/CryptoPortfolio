@@ -134,6 +134,59 @@ shared secret key over a completely insecure channel, without an adversary being
 determine that secret. It forms the basis for secure key agreement protocols used all
 over the internet today.";
 
+            case CipherType.Playfair:
+                return @"
+History:
+Invented by Charles Wheatstone in 1854, but named after his friend Lord Playfair, who
+championed its use. It was used for tactical purposes by British forces in the Second Boer
+War and WWI, and by Australia and Germany during WWII.
+
+Purpose:
+The Playfair cipher was the first practical digraph substitution cipher. By encrypting pairs
+of letters instead of single letters, it obscures the frequency patterns of individual letters,
+making it a significant step up in security from simple substitution ciphers and resistant
+to standard frequency analysis of the time.";
+
+            case CipherType.FourSquare:
+                return @"
+History:
+The Four-Square cipher is a manual symmetric encryption technique invented by the French
+cryptographer Félix Delastelle. It was described in his 1902 book ""Traité Élémentaire
+de Cryptographie.""
+
+Purpose:
+Like the Playfair cipher, it encrypts pairs of letters (digraphs) to resist frequency
+analysis. However, by using four squares instead of one, it avoids having plaintext letters
+encrypt to themselves and is slightly stronger than Playfair. It was considered a high-security
+field cipher for its time.";
+
+            case CipherType.Bifid:
+                return @"
+History:
+Also invented by the French cryptographer Félix Delastelle around 1901, the Bifid cipher
+is another example of his work with polygraphic ciphers, alongside the Four-Square cipher.
+
+Purpose:
+The Bifid cipher is a clever combination of fractionation (from the Polybius square) and
+transposition. It breaks letters into coordinates, mixes all the coordinates together, and
+then reassembles them into new letters. This process effectively diffuses the statistical
+properties of the original language over the entire message, making it a strong pen-and-paper
+cipher for its time.";
+
+            case CipherType.Hill:
+                return @"
+History:
+Invented by American mathematician Lester S. Hill in 1929. It was the first polygraphic
+cipher that could practically operate on more than three symbols at once.
+
+Purpose:
+The Hill Cipher was a groundbreaking application of advanced mathematics (linear algebra)
+to cryptography. It uses matrix multiplication to encrypt blocks of letters, which thoroughly
+hides individual letter frequencies. Its security relies on the fact that matrix inversion
+is non-trivial. While vulnerable to known-plaintext attacks, it was mechanically simple
+and represented a new era of mathematical cryptography.";
+
+
             default:
                 return "No history found for this cipher.";
         }

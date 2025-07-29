@@ -1,7 +1,4 @@
-﻿/// <summary>
-/// Defines the different types of ciphers available in the application.
-/// </summary>
-public enum CipherType
+﻿public enum CipherType
 {
     Caesar,
     Vigenere,
@@ -11,6 +8,10 @@ public enum CipherType
     SimpleSubstitution,
     ColumnarTransposition,
     Adfgvx,
+    Playfair,
+    FourSquare,
+    Bifid,
     EnigmaMachine,
-    DiffieHellman
+    DiffieHellman,
+    Hill // Last Chypher to be added for now
 }

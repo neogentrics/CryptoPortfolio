@@ -4,7 +4,6 @@ using System.Linq;
 
 public class Program
 {
-    // Storing historical Enigma components
     private static readonly Dictionary<string, (string, char)> Rotors = new Dictionary<string, (string, char)>
     {
         {"I", ("EKMFLGDQVZNTOWYHXUSPAIBRCJ", 'Q')},
@@ -32,11 +31,15 @@ public class Program
             Console.WriteLine("6. Simple Substitution Cipher");
             Console.WriteLine("7. Columnar Transposition Cipher");
             Console.WriteLine("8. ADFGVX Cipher");
-            Console.WriteLine("9. Enigma Machine Simulator");
-            Console.WriteLine("10. Diffie-Hellman Key Exchange");
-            Console.WriteLine("11. View Cipher History");
-            Console.WriteLine("12. Exit");
-            Console.Write("Enter your choice (1-12): ");
+            Console.WriteLine("9. Playfair Cipher");
+            Console.WriteLine("10. Four-Square Cipher");
+            Console.WriteLine("11. Bifid Cipher");
+            Console.WriteLine("12. Hill Cipher");
+            Console.WriteLine("13. Enigma Machine Simulator");
+            Console.WriteLine("14. Diffie-Hellman Key Exchange");
+            Console.WriteLine("15. View Cipher History");
+            Console.WriteLine("16. Exit");
+            Console.Write("Enter your choice (1-16): ");
 
             string choice = Console.ReadLine() ?? "";
 
@@ -50,10 +53,14 @@ public class Program
                 case "6": RunSimpleSubstitutionCipher(); break;
                 case "7": RunColumnarTranspositionCipher(); break;
                 case "8": RunAdfgvxCipher(); break;
-                case "9": RunEnigmaMachine(); break;
-                case "10": DiffieHellmanKeyExchange.RunExchange(); break;
-                case "11": ShowCipherHistory(); break;
-                case "12": Console.WriteLine("Exiting program. Goodbye!"); return;
+                case "9": RunPlayfairCipher(); break;
+                case "10": RunFourSquareCipher(); break;
+                case "11": RunBifidCipher(); break;
+                case "12": RunHillCipher(); break;
+                case "13": RunEnigmaMachine(); break;
+                case "14": DiffieHellmanKeyExchange.RunExchange(); break;
+                case "15": ShowCipherHistory(); break;
+                case "16": Console.WriteLine("Exiting program. Goodbye!"); return;
                 default: Console.WriteLine("Invalid choice."); break;
             }
 
@@ -207,6 +214,63 @@ public class Program
         else
         {
             Console.WriteLine("Invalid selection.");
+        }
+    }
+
+    private static void RunPlayfairCipher()
+    {
+        Console.WriteLine("\n--- Playfair Cipher ---");
+        Console.Write("Enter text: ");
+        string text = GetStringKey("");
+        Console.Write("Enter keyword: ");
+        string key = GetStringKey("");
+        string encrypted = PlayfairCipher.Encrypt(text, key);
+        Console.WriteLine($"Encrypted: {encrypted}");
+        Console.WriteLine($"Decrypted: {PlayfairCipher.Decrypt(encrypted, key)}");
+    }
+
+    private static void RunFourSquareCipher()
+    {
+        Console.WriteLine("\n--- Four-Square Cipher ---");
+        Console.Write("Enter text: ");
+        string text = GetStringKey("");
+        Console.Write("Enter keyword 1: ");
+        string key1 = GetStringKey("");
+        Console.Write("Enter keyword 2: ");
+        string key2 = GetStringKey("");
+
+        string encrypted = FourSquareCipher.Encrypt(text, key1, key2);
+        Console.WriteLine($"Encrypted: {encrypted}");
+        Console.WriteLine($"Decrypted: {FourSquareCipher.Decrypt(encrypted, key1, key2)}");
+    }
+
+    private static void RunBifidCipher()
+    {
+        Console.WriteLine("\n--- Bifid Cipher ---");
+        Console.Write("Enter text: ");
+        string text = GetStringKey("");
+        Console.Write("Enter keyword: ");
+        string key = GetStringKey("");
+
+        string encrypted = BifidCipher.Encrypt(text, key);
+        Console.WriteLine($"Encrypted: {encrypted}");
+        Console.WriteLine($"Decrypted: {BifidCipher.Decrypt(encrypted, key)}");
+    }
+
+    private static void RunHillCipher()
+    {
+        Console.WriteLine("\n--- Hill Cipher (2x2) ---");
+        Console.Write("Enter text: ");
+        string text = GetStringKey("");
+        Console.Write("Enter a 4-character keyword: ");
+        string key = GetStringKey("");
+
+        string encrypted = HillCipher.Encrypt(text, key);
+        Console.WriteLine($"Encrypted: {encrypted}");
+
+        if (!encrypted.StartsWith("Error:"))
+        {
+            Console.WriteLine($"Decrypted: {HillCipher.Decrypt(encrypted, key)}");
         }
     }
 
