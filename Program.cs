@@ -1,204 +1,156 @@
 ﻿using System;
-using System.Text;
 
 /// <summary>
-/// A static class to handle Caesar Cipher encryption and decryption.
-/// </summary>
-public static class CaesarCipher
-{
-    /// <summary>
-    /// Encrypts a string using the Caesar Cipher algorithm.
-    /// </summary>
-    /// <param name="plainText">The text to encrypt.</param>
-    /// <param name="key">The integer key to shift letters by.</param>
-    /// <returns>The encrypted ciphertext.</returns>
-    public static string Encrypt(string plainText, int key)
-    {
-        // StringBuilder is more efficient for building strings in a loop.
-        StringBuilder cipherText = new StringBuilder();
-
-        // Loop through each character in the input string.
-        foreach (char character in plainText)
-        {
-            // Only shift alphabetic characters; leave others (spaces, punctuation) as they are.
-            if (char.IsLetter(character))
-            {
-                // Determine the base character ('A' for uppercase, 'a' for lowercase).
-                char alphabetBase = char.IsUpper(character) ? 'A' : 'a';
-
-                // Perform the shift calculation.
-                // 1. Get the 0-25 position of the character: (character - alphabetBase)
-                // 2. Add the key: + key
-                // 3. Wrap around the alphabet using modulo 26: % 26
-                // 4. Convert back to a character: + alphabetBase
-                int shiftedPosition = (character - alphabetBase + key) % 26;
-
-                // Modulo can return a negative result if the key is negative, so we adjust.
-                if (shiftedPosition < 0)
-                {
-                    shiftedPosition += 26;
-                }
-
-                char shiftedChar = (char)(alphabetBase + shiftedPosition);
-                cipherText.Append(shiftedChar);
-            }
-            else
-            {
-                // If it's not a letter, append it without changing it.
-                cipherText.Append(character);
-            }
-        }
-
-        return cipherText.ToString();
-    }
-
-    /// <summary>
-    /// Decrypts a string that was encrypted with the Caesar Cipher.
-    //  Note: Decrypting is the same as encrypting with a negative key.
-    /// </summary>
-    /// <param name="cipherText">The text to decrypt.</param>
-    /// <param name="key">The original key used for encryption.</param>
-    /// <returns>The decrypted plaintext.</returns>
-    public static string Decrypt(string cipherText, int key)
-    {
-        // Decrypting is just shifting in the opposite direction.
-        // We can achieve this by encrypting with the inverse of the key.
-        return Encrypt(cipherText, 26 - (key % 26));
-    }
-}
-
-/// <summary>
-/// A static class to handle Vigenère Cipher encryption and decryption.
-/// </summary>
-public static class VigenereCipher
-{
-    /// <summary>
-    /// Normalizes the key by removing non-alphabetic characters and converting to uppercase.
-    /// </summary>
-    private static string CleanKey(string key)
-    {
-        StringBuilder cleanedKey = new StringBuilder();
-        foreach (char c in key)
-        {
-            if (char.IsLetter(c))
-            {
-                cleanedKey.Append(char.ToUpper(c));
-            }
-        }
-        return cleanedKey.ToString();
-    }
-
-    /// <summary>
-    /// Encrypts a string using the Vigenère Cipher algorithm.
-    /// </summary>
-    /// <param name="plainText">The text to encrypt.</param>
-    /// <param name="key">The keyword to use for encryption.</param>
-    /// <returns>The encrypted ciphertext.</returns>
-    public static string Encrypt(string plainText, string key)
-    {
-        string validKey = CleanKey(key);
-        if (string.IsNullOrEmpty(validKey)) return plainText; // Return original text if key is invalid
-
-        StringBuilder cipherText = new StringBuilder();
-        int keyIndex = 0;
-
-        foreach (char character in plainText)
-        {
-            if (char.IsLetter(character))
-            {
-                char alphabetBase = char.IsUpper(character) ? 'A' : 'a';
-                int plainTextOffset = character - alphabetBase;
-
-                // Get the shift amount from the current key character
-                int keyShift = validKey[keyIndex] - 'A';
-
-                // Apply the shift
-                int cipherOffset = (plainTextOffset + keyShift) % 26;
-                cipherText.Append((char)(alphabetBase + cipherOffset));
-
-                // Move to the next character in the key, wrapping around if necessary
-                keyIndex = (keyIndex + 1) % validKey.Length;
-            }
-            else
-            {
-                // Keep non-alphabetic characters as they are
-                cipherText.Append(character);
-            }
-        }
-        return cipherText.ToString();
-    }
-
-    /// <summary>
-    /// Decrypts a string encrypted with the Vigenère Cipher.
-    /// </summary>
-    /// <param name="cipherText">The text to decrypt.</param>
-    /// <param name="key">The keyword used for encryption.</param>
-    /// <returns>The decrypted plaintext.</returns>
-    public static string Decrypt(string cipherText, string key)
-    {
-        string validKey = CleanKey(key);
-        if (string.IsNullOrEmpty(validKey)) return cipherText;
-
-        StringBuilder plainText = new StringBuilder();
-        int keyIndex = 0;
-
-        foreach (char character in cipherText)
-        {
-            if (char.IsLetter(character))
-            {
-                char alphabetBase = char.IsUpper(character) ? 'A' : 'a';
-                int cipherOffset = character - alphabetBase;
-
-                // Get the shift amount from the current key character
-                int keyShift = validKey[keyIndex] - 'A';
-
-                // Apply the reverse shift
-                // We add 26 before the modulo to handle potential negative numbers
-                int plainTextOffset = (cipherOffset - keyShift + 26) % 26;
-                plainText.Append((char)(alphabetBase + plainTextOffset));
-
-                // Move to the next character in the key
-                keyIndex = (keyIndex + 1) % validKey.Length;
-            }
-            else
-            {
-                plainText.Append(character);
-            }
-        }
-        return plainText.ToString();
-    }
-}
-
-
-/// <summary>
-/// The main program class to run and test the ciphers.
+/// The main program class to run the interactive cipher tool.
 /// </summary>
 public class Program
 {
     public static void Main(string[] args)
     {
-        Console.WriteLine("--- Caesar Cipher Demonstration ---");
-        string caesarMessage = "Hello, World!";
-        int caesarKey = 3;
-        Console.WriteLine($"Original Message: {caesarMessage}");
-        Console.WriteLine($"Key: {caesarKey}");
-        string encryptedCaesar = CaesarCipher.Encrypt(caesarMessage, caesarKey);
-        Console.WriteLine($"Encrypted Message: {encryptedCaesar}");
-        string decryptedCaesar = CaesarCipher.Decrypt(encryptedCaesar, caesarKey);
-        Console.WriteLine($"Decrypted Message: {decryptedCaesar}");
-        Console.WriteLine("\n" + new string('-', 40) + "\n");
+        // Main program loop
+        while (true)
+        {
+            // --- Main Menu ---
+            Console.WriteLine("\n--- CryptoPortfolio Cipher Tool ---");
+            Console.WriteLine("Select an option:");
+            Console.WriteLine("1. Caesar Cipher");
+            Console.WriteLine("2. Vigenère Cipher");
+            Console.WriteLine("3. Atbash Cipher");
+            Console.WriteLine("4. Layered Encryption (All Ciphers)");
+            Console.WriteLine("5. Exit");
+            Console.Write("Enter your choice (1-5): ");
 
+            string choice = Console.ReadLine() ?? "";
 
-        Console.WriteLine("--- Vigenère Cipher Demonstration ---");
-        string vigenereMessage = "Attack at dawn!";
-        string vigenereKey = "LEMON";
-        Console.WriteLine($"Original Message: {vigenereMessage}");
-        Console.WriteLine($"Key: {vigenereKey}");
-        string encryptedVigenere = VigenereCipher.Encrypt(vigenereMessage, vigenereKey);
-        Console.WriteLine($"Encrypted Message: {encryptedVigenere}");
-        string decryptedVigenere = VigenereCipher.Decrypt(encryptedVigenere, vigenereKey);
-        Console.WriteLine($"Decrypted Message: {decryptedVigenere}");
+            // Process user's choice
+            switch (choice)
+            {
+                case "1":
+                    RunCaesarCipher();
+                    break;
+                case "2":
+                    RunVigenereCipher();
+                    break;
+                case "3":
+                    RunAtbashCipher();
+                    break;
+                case "4":
+                    RunLayeredEncryption();
+                    break;
+                case "5":
+                    Console.WriteLine("Exiting program. Goodbye!");
+                    return; // Exit the Main method, which ends the program
+                default:
+                    Console.WriteLine("Invalid choice. Please enter a number between 1 and 5.");
+                    break;
+            }
 
-        Console.WriteLine("\n--- End of Demonstration ---");
+            Console.WriteLine("\nPress any key to return to the main menu...");
+            Console.ReadKey();
+            Console.Clear(); // Clear the console for a clean menu display
+        }
+    }
+
+    private static void RunCaesarCipher()
+    {
+        Console.WriteLine("\n--- Caesar Cipher ---");
+        Console.Write("Enter the text to encrypt: ");
+        string text = Console.ReadLine() ?? "";
+
+        int key;
+        while (true)
+        {
+            Console.Write("Enter the shift key (a whole number): ");
+            if (int.TryParse(Console.ReadLine(), out key))
+            {
+                break;
+            }
+            Console.WriteLine("Invalid key. Please enter a whole number.");
+        }
+
+        string encryptedText = CaesarCipher.Encrypt(text, key);
+        Console.WriteLine($"Encrypted: {encryptedText}");
+
+        string decryptedText = CaesarCipher.Decrypt(encryptedText, key);
+        Console.WriteLine($"Decrypted back: {decryptedText}");
+    }
+
+    private static void RunVigenereCipher()
+    {
+        Console.WriteLine("\n--- Vigenère Cipher ---");
+        Console.Write("Enter the text to encrypt: ");
+        string text = Console.ReadLine() ?? "";
+
+        Console.Write("Enter the keyword: ");
+        string key = Console.ReadLine() ?? "";
+
+        string encryptedText = VigenereCipher.Encrypt(text, key);
+        Console.WriteLine($"Encrypted: {encryptedText}");
+
+        string decryptedText = VigenereCipher.Decrypt(encryptedText, key);
+        Console.WriteLine($"Decrypted back: {decryptedText}");
+    }
+
+    private static void RunAtbashCipher()
+    {
+        Console.WriteLine("\n--- Atbash Cipher ---");
+        Console.Write("Enter the text to transform: ");
+        string text = Console.ReadLine() ?? "";
+
+        string transformedText = AtbashCipher.Transform(text);
+        Console.WriteLine($"Transformed: {transformedText}");
+
+        string originalText = AtbashCipher.Transform(transformedText);
+        Console.WriteLine($"Transformed back: {originalText}");
+    }
+
+    /// <summary>
+    /// Runs the layered encryption and decryption process.
+    /// Encryption Order: Caesar -> Vigenère -> Atbash
+    /// Decryption Order: Atbash -> Vigenère -> Caesar (Reverse)
+    /// </summary>
+    private static void RunLayeredEncryption()
+    {
+        Console.WriteLine("\n--- Layered Encryption (All Ciphers) ---");
+        Console.Write("Enter the text to encrypt: ");
+        string originalText = Console.ReadLine() ?? "";
+
+        // Get Caesar Key
+        int caesarKey;
+        while (true)
+        {
+            Console.Write("Enter the Caesar cipher key (a whole number): ");
+            if (int.TryParse(Console.ReadLine(), out caesarKey))
+            {
+                break;
+            }
+            Console.WriteLine("Invalid key. Please enter a whole number.");
+        }
+
+        // Get Vigenère Key
+        Console.Write("Enter the Vigenère cipher keyword: ");
+        string vigenereKey = Console.ReadLine() ?? "";
+
+        // --- ENCRYPTION PROCESS ---
+        Console.WriteLine("\nEncrypting...");
+        string caesarEncrypted = CaesarCipher.Encrypt(originalText, caesarKey);
+        Console.WriteLine($"After Caesar: {caesarEncrypted}");
+
+        string vigenereEncrypted = VigenereCipher.Encrypt(caesarEncrypted, vigenereKey);
+        Console.WriteLine($"After Vigenère: {vigenereEncrypted}");
+
+        string finalEncrypted = AtbashCipher.Transform(vigenereEncrypted);
+        Console.WriteLine($"Final (after Atbash): {finalEncrypted}");
+
+        // --- DECRYPTION PROCESS ---
+        Console.WriteLine("\nDecrypting...");
+        string atbashDecrypted = AtbashCipher.Transform(finalEncrypted);
+        Console.WriteLine($"After Atbash Decrypt: {atbashDecrypted}");
+
+        string vigenereDecrypted = VigenereCipher.Decrypt(atbashDecrypted, vigenereKey);
+        Console.WriteLine($"After Vigenère Decrypt: {vigenereDecrypted}");
+
+        string finalDecrypted = CaesarCipher.Decrypt(vigenereDecrypted, caesarKey);
+        Console.WriteLine($"Final Decrypted Message: {finalDecrypted}");
     }
 }
