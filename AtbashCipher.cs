@@ -1,17 +1,20 @@
 ﻿using System.Text;
 
 /// <summary>
-/// A static class to handle Atbash Cipher encryption and decryption.
-/// The Atbash cipher is a simple substitution cipher that reverses the alphabet.
-/// Encryption and Decryption are the same process.
+/// Implements the Atbash Cipher.
+/// 
+/// History:
+/// Originating around 600-500 BCE, Atbash is one of the earliest known substitution ciphers.
+/// It was originally used for the Hebrew alphabet and its name is derived from the first, last,
+/// second, and second-to-last Hebrew letters.
+/// 
+/// Purpose:
+/// Its most famous use is in the Book of Jeremiah from the Bible, where it was used to obscure
+/// politically sensitive names to avoid persecution. It works by simply reversing the alphabet
+/// (A becomes Z, B becomes Y, etc.).
 /// </summary>
 public static class AtbashCipher
 {
-    /// <summary>
-    /// Encrypts or decrypts text using the Atbash cipher.
-    /// </summary>
-    /// <param name="text">The input text (plaintext or ciphertext).</param>
-    /// <returns>The transformed text.</returns>
     public static string Transform(string text)
     {
         StringBuilder result = new StringBuilder();
@@ -22,14 +25,11 @@ public static class AtbashCipher
             {
                 char alphabetBase = char.IsUpper(character) ? 'A' : 'a';
                 int offset = character - alphabetBase;
-                // The Atbash transformation is reversing the alphabet's positions.
-                // A (0) becomes Z (25), B (1) becomes Y (24), etc.
                 char transformedChar = (char)(alphabetBase + (25 - offset));
                 result.Append(transformedChar);
             }
             else
             {
-                // Keep non-alphabetic characters as they are.
                 result.Append(character);
             }
         }

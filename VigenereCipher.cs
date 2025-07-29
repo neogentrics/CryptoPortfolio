@@ -1,8 +1,19 @@
 ﻿using System.Text;
 
 /// <summary>
-/// A static class to handle Vigenère Cipher encryption and decryption.
+/// Implements the Vigenère Cipher.
+/// 
+/// History:
+/// While named after Blaise de Vigenère, this cipher was actually invented by Giovan Battista
+/// Bellaso in 1553. For three centuries, it was nicknamed "le chiffrage indéchiffrable"
+/// (the indecipherable cipher).
+/// 
+/// Purpose:
+/// It was a major advancement designed specifically to defeat frequency analysis, the primary tool
+/// used to break ciphers at the time. It applies a series of interwoven Caesar ciphers based on
+/// the letters of a keyword, making it a powerful polyalphabetic substitution cipher.
 /// </summary>
+/// 
 public static class VigenereCipher
 {
     /// <summary>

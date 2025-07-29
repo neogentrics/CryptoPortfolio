@@ -1,7 +1,17 @@
 ﻿using System.Text;
 
 /// <summary>
-/// A static class to handle Caesar Cipher encryption and decryption.
+/// Implements the Caesar Cipher.
+/// 
+/// History:
+/// Named after Julius Caesar, who, according to Suetonius, used it around 100 BCE for his
+/// military communications. It is one of the simplest and most widely known encryption techniques.
+/// 
+/// Purpose:
+/// Caesar used it to protect military intelligence from being read if a message was intercepted.
+/// It was effective because literacy was not widespread, and the idea of cryptography was not
+/// common knowledge. It operates by shifting each letter of the plaintext by a fixed number
+/// of places down the alphabet.
 /// </summary>
 
 public static class CaesarCipher
