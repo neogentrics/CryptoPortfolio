@@ -225,4 +225,24 @@ public static class MenuRunners
             Console.WriteLine("Invalid selection.");
         }
     }
+
+    public static void RunDarkCancerCipher()
+    {
+        Console.WriteLine("\n--- Dark Cancer Cipher (Custom Layered System) ---");
+        Console.Write("Enter text: ");
+        string text = InputHelpers.GetStringKey("");
+        Console.Write("Enter master keyword (min 8 chars): ");
+        string key = InputHelpers.GetStringKey("");
+
+        string encrypted = CustomLayeredCipher.Encrypt(text, key);
+
+        if (!encrypted.StartsWith("Error:"))
+        {
+            CustomLayeredCipher.Decrypt(encrypted, key);
+        }
+        else
+        {
+            Console.WriteLine(encrypted);
+        }
+    }
 }

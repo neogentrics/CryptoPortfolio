@@ -98,6 +98,11 @@ public static class FourSquareCipher
     public static string Decrypt(string cipherText, string key1, string key2)
     {
         InitializeGrids(key1, key2);
+
+        // --- THIS IS THE FIX ---
+        // We must convert the incoming ciphertext to uppercase to match the dictionary keys.
+        cipherText = cipherText.ToUpper();
+
         StringBuilder plainText = new StringBuilder();
 
         for (int i = 0; i < cipherText.Length; i += 2)
@@ -105,6 +110,7 @@ public static class FourSquareCipher
             char char1 = cipherText[i];
             char char2 = cipherText[i + 1];
 
+            // This will no longer crash because char1 and char2 are now uppercase.
             Point pos1 = Ciphertext1Pos[char1];
             Point pos2 = Ciphertext2Pos[char2];
 
@@ -114,4 +120,5 @@ public static class FourSquareCipher
 
         return plainText.ToString();
     }
+
 }
