@@ -6,16 +6,33 @@ This repository contains an interactive C# command-line tool for encrypting and 
 
 ## Key Features
 
-This tool allows you to use the following ciphers individually, view their history, or chain them together for stronger encryption.
+This tool allows you to use the following ciphers individually, view their history, or chain them together.
 
-* **Caesar Cipher:** A simple substitution cipher where each letter is shifted by a fixed number of positions.
-* **Vigenère Cipher:** A polyalphabetic substitution cipher that uses a keyword to apply different shifts.
-* **Atbash Cipher:** An ancient Hebrew cipher that simply reverses the alphabet.
-* **Rail Fence Cipher:** A transposition cipher that scrambles the order of letters in a zigzag pattern.
-* **Polybius Square Cipher:** A fractionation cipher that maps letters to grid coordinates.
-* **Simple Substitution Cipher:** Uses a keyword to create a fully scrambled substitution alphabet.
-* **Layered Encryption Mode:** Chains all six implemented ciphers together for significantly increased complexity.
-* **Cipher History Viewer:** An interactive menu to read about the origin, purpose, and history of each implemented cipher.
+* **Substitution Ciphers:** Atbash, Caesar, Vigenère, Simple Substitution (Keyword).
+* **Transposition Ciphers:** Rail Fence, Columnar Transposition.
+* **Fractionation & Product Ciphers:** Polybius Square, ADFGVX.
+* **Electro-Mechanical Simulation:** A detailed simulation of the WWII Enigma Machine.
+* **Modern Concepts:** A demonstration of the Diffie-Hellman Key Exchange protocol.
+* **Cipher History Viewer:** An interactive menu to read about the origin and purpose of each implemented algorithm.
+
+---
+
+## Project Roadmap
+
+This project is an ongoing effort to build a comprehensive library of cryptographic algorithms. The future development plan is as follows:
+
+1.  **Complete the Classics:** Implement additional influential classic ciphers, including:
+    * Playfair Cipher
+    * Four-Square Cipher
+    * Bifid Cipher
+    * Hill Cipher (Matrix-based)
+2.  **Design a Custom System:** Create a unique, proprietary layered cipher system using the implemented classic ciphers, all derived from a single master keyword.
+3.  **Bridge to Modernity:** Implement simplified versions of modern, standardized algorithms to understand their core principles:
+    * **Simplified AES** (Block Cipher)
+    * **Simplified RSA** (Asymmetric Encryption)
+4.  **Add Hashing Utility:** Implement the **SHA-256** algorithm to demonstrate data integrity checks.
+5.  **Final Integration:** Update the custom layered cipher to optionally include the modern algorithms as final, hardening steps.
+6.  **(Challenge Goal):** Design and implement a completely original cipher from scratch.
 
 ---
 
@@ -31,3 +48,6 @@ This is a C# .NET Console Application. To run it:
 3.  Press `F5` or the "Start" button to build and run the project.
 
 The console will launch an interactive menu allowing you to select an individual cipher, use the layered encryption mode, or view the history of the ciphers.
+
+#--- 
+

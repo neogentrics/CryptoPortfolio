@@ -8,5 +8,9 @@ public enum CipherType
     Atbash,
     RailFence,
     PolybiusSquare,
-    SimpleSubstitution
+    SimpleSubstitution,
+    ColumnarTransposition,
+    Adfgvx,
+    EnigmaMachine,
+    DiffieHellman
 }

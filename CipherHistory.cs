@@ -80,6 +80,60 @@ possibilities to 26! (a 4 with 26 zeroes), making it immune to brute-force attac
 However, Al-Kindi's invention of frequency analysis proved that any monoalphabetic
 substitution cipher is vulnerable to statistical attacks.";
 
+            case CipherType.ColumnarTransposition:
+                return @"
+History:
+Columnar Transposition is a classic and widely used method of transposition that has been
+used in various forms for centuries. It was a common pen-and-paper field cipher used in
+military and diplomatic communication from the 1800s through the mid-20th century.
+
+Purpose:
+It scrambles the order of plaintext letters based on a keyword, making it more secure than
+simple transposition ciphers like the Rail Fence. It operates by writing the message into a grid
+and reading the columns out in an order determined by the alphabetical sequence of the
+keyword's letters. It's a key component in more complex product ciphers like the ADFGVX.";
+
+            case CipherType.Adfgvx:
+                return @"
+History:
+Invented by German Lieutenant Fritz Nebel in March 1918 and used by the German Army on the
+Western Front during World War I. The letters A, D, F, G, V, X were chosen for their
+low risk of error when transmitted via Morse code.
+
+Purpose:
+It was a state-of-the-art field cipher, designed to be performed with pen and paper while
+being highly secure. It masterfully combines a substitution stage (using a mixed-alphabet
+Polybius-style square) with a transposition stage (using Columnar Transposition) to create
+a ciphertext resistant to standard cryptanalysis of the era.";
+
+            case CipherType.EnigmaMachine:
+                return @"
+History:
+Invented by German engineer Arthur Scherbius in 1918, the Enigma was adopted by the German
+military in the mid-1920s. It became their primary cryptographic tool during World War II,
+with its complex, ever-changing substitutions considered unbreakable by its creators.
+
+Purpose:
+To automate polyalphabetic substitution to a degree impossible by hand. The machine used a
+series of rotating rotors, a reflector, and a plugboard to create a cipher with trillions
+of possible configurations. The Allied effort to break Enigma at Bletchley Park, led by
+figures like Alan Turing, was a monumental cryptanalytic success that significantly
+shortened the war.";
+
+            case CipherType.DiffieHellman:
+                return @"
+History:
+Published by Whitfield Diffie and Martin Hellman in 1976, this was a revolutionary
+breakthrough that launched the era of public-key cryptography. It was later revealed that
+British Intelligence (GCHQ) had independently developed an equivalent system years earlier,
+but it was kept top secret.
+
+Purpose:
+To solve the age-old key exchange problem. It provides a method for two parties to agree on a
+shared secret key over a completely insecure channel, without an adversary being able to
+determine that secret. It forms the basis for secure key agreement protocols used all
+over the internet today.";
+
             default:
                 return "No history found for this cipher.";
         }

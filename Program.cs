@@ -1,10 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
-/// <summary>
-/// The main program class to run the interactive cipher tool.
-/// </summary>
 public class Program
 {
+    // Storing historical Enigma components
+    private static readonly Dictionary<string, (string, char)> Rotors = new Dictionary<string, (string, char)>
+    {
+        {"I", ("EKMFLGDQVZNTOWYHXUSPAIBRCJ", 'Q')},
+        {"II", ("AJDKSIRUXBLHWTMCQGZNPYFVOE", 'E')},
+        {"III", ("BDFHJLCPRTXVZNYEIWGAKMUSQO", 'V')},
+        {"IV", ("ESOVPZJAYQUIRHXLNFTGKDCMWB", 'J')},
+        {"V", ("VZBRGITYUPSDNHLXAWMJQOFECK", 'Z')}
+    };
+    private static readonly Dictionary<string, string> Reflectors = new Dictionary<string, string>
+    {
+        {"B", "YRUHQSLDPXNGOKMIEBFZCWVJAT"},
+        {"C", "FVPJIAOYEDRZXWGCTKUQSBNMHL"}
+    };
+
     public static void Main(string[] args)
     {
         while (true)
@@ -16,10 +30,13 @@ public class Program
             Console.WriteLine("4. Rail Fence Cipher");
             Console.WriteLine("5. Polybius Square Cipher");
             Console.WriteLine("6. Simple Substitution Cipher");
-            Console.WriteLine("7. Layered Encryption (All Ciphers)");
-            Console.WriteLine("8. View Cipher History");
-            Console.WriteLine("9. Exit");
-            Console.Write("Enter your choice (1-9): ");
+            Console.WriteLine("7. Columnar Transposition Cipher");
+            Console.WriteLine("8. ADFGVX Cipher");
+            Console.WriteLine("9. Enigma Machine Simulator");
+            Console.WriteLine("10. Diffie-Hellman Key Exchange");
+            Console.WriteLine("11. View Cipher History");
+            Console.WriteLine("12. Exit");
+            Console.Write("Enter your choice (1-12): ");
 
             string choice = Console.ReadLine() ?? "";
 
@@ -31,9 +48,12 @@ public class Program
                 case "4": RunRailFenceCipher(); break;
                 case "5": RunPolybiusSquareCipher(); break;
                 case "6": RunSimpleSubstitutionCipher(); break;
-                case "7": RunLayeredEncryption(); break;
-                case "8": ShowCipherHistory(); break;
-                case "9": Console.WriteLine("Exiting program. Goodbye!"); return;
+                case "7": RunColumnarTranspositionCipher(); break;
+                case "8": RunAdfgvxCipher(); break;
+                case "9": RunEnigmaMachine(); break;
+                case "10": DiffieHellmanKeyExchange.RunExchange(); break;
+                case "11": ShowCipherHistory(); break;
+                case "12": Console.WriteLine("Exiting program. Goodbye!"); return;
                 default: Console.WriteLine("Invalid choice."); break;
             }
 
@@ -48,7 +68,7 @@ public class Program
     {
         Console.WriteLine("\n--- Caesar Cipher ---");
         Console.Write("Enter text: ");
-        string text = Console.ReadLine() ?? "";
+        string text = GetStringKey("");
         int key = GetIntKey("Enter shift key: ");
         string encrypted = CaesarCipher.Encrypt(text, key);
         Console.WriteLine($"Encrypted: {encrypted}");
@@ -59,9 +79,9 @@ public class Program
     {
         Console.WriteLine("\n--- Vigenère Cipher ---");
         Console.Write("Enter text: ");
-        string text = Console.ReadLine() ?? "";
+        string text = GetStringKey("");
         Console.Write("Enter keyword: ");
-        string key = Console.ReadLine() ?? "";
+        string key = GetStringKey("");
         string encrypted = VigenereCipher.Encrypt(text, key);
         Console.WriteLine($"Encrypted: {encrypted}");
         Console.WriteLine($"Decrypted: {VigenereCipher.Decrypt(encrypted, key)}");
@@ -71,7 +91,7 @@ public class Program
     {
         Console.WriteLine("\n--- Atbash Cipher ---");
         Console.Write("Enter text: ");
-        string text = Console.ReadLine() ?? "";
+        string text = GetStringKey("");
         string transformed = AtbashCipher.Transform(text);
         Console.WriteLine($"Transformed: {transformed}");
         Console.WriteLine($"Reversed: {AtbashCipher.Transform(transformed)}");
@@ -81,7 +101,7 @@ public class Program
     {
         Console.WriteLine("\n--- Rail Fence Cipher ---");
         Console.Write("Enter text: ");
-        string text = Console.ReadLine() ?? "";
+        string text = GetStringKey("");
         int rails = GetIntKey("Enter number of rails: ");
         string encrypted = RailFenceCipher.Encrypt(text, rails);
         Console.WriteLine($"Encrypted: {encrypted}");
@@ -92,7 +112,7 @@ public class Program
     {
         Console.WriteLine("\n--- Polybius Square Cipher ---");
         Console.Write("Enter text (A-Z): ");
-        string text = Console.ReadLine() ?? "";
+        string text = GetStringKey("");
         string encrypted = PolybiusSquareCipher.Encrypt(text);
         Console.WriteLine($"Encrypted: {encrypted}");
         Console.WriteLine($"Decrypted: {PolybiusSquareCipher.Decrypt(encrypted)}");
@@ -102,62 +122,84 @@ public class Program
     {
         Console.WriteLine("\n--- Simple Substitution Cipher ---");
         Console.Write("Enter text: ");
-        string text = Console.ReadLine() ?? "";
+        string text = GetStringKey("");
         Console.Write("Enter keyword: ");
-        string key = Console.ReadLine() ?? "";
+        string key = GetStringKey("");
         string encrypted = SimpleSubstitutionCipher.Encrypt(text, key);
         Console.WriteLine($"Encrypted: {encrypted}");
         Console.WriteLine($"Decrypted: {SimpleSubstitutionCipher.Decrypt(encrypted, key)}");
     }
 
-    // Feature Methods
-    private static void RunLayeredEncryption()
+    private static void RunColumnarTranspositionCipher()
     {
-        Console.WriteLine("\n--- Layered Encryption (All 6 Ciphers) ---");
+        Console.WriteLine("\n--- Columnar Transposition Cipher ---");
         Console.Write("Enter text: ");
-        string text = Console.ReadLine() ?? "";
+        string text = GetStringKey("");
+        Console.Write("Enter keyword: ");
+        string key = GetStringKey("");
+        string encrypted = ColumnarTranspositionCipher.Encrypt(text, key);
+        Console.WriteLine($"Encrypted: {encrypted}");
+        Console.WriteLine($"Decrypted: {ColumnarTranspositionCipher.Decrypt(encrypted, key)}");
+    }
 
-        // Get all keys
-        string simpleSubKey = GetStringKey("Enter Simple Substitution keyword: ");
-        string vigenereKey = GetStringKey("Enter Vigenère keyword: ");
-        int caesarKey = GetIntKey("Enter Caesar key: ");
-        int railFenceKey = GetIntKey("Enter Rail Fence key (rails): ");
+    private static void RunAdfgvxCipher()
+    {
+        Console.WriteLine("\n--- ADFGVX Cipher ---");
+        Console.Write("Enter text (A-Z, 0-9): ");
+        string text = GetStringKey("");
+        Console.Write("Enter grid keyword: ");
+        string gridKey = GetStringKey("");
+        Console.Write("Enter transposition keyword: ");
+        string transKey = GetStringKey("");
 
-        // Encryption Order: Substitution -> Vigenère -> Caesar -> Polybius -> Rail Fence -> Atbash
-        Console.WriteLine("\nEncrypting...");
-        string s1 = SimpleSubstitutionCipher.Encrypt(text, simpleSubKey);
-        string s2 = VigenereCipher.Encrypt(s1, vigenereKey);
-        string s3 = CaesarCipher.Encrypt(s2, caesarKey);
-        string s4 = PolybiusSquareCipher.Encrypt(s3);
-        string s5 = RailFenceCipher.Encrypt(s4, railFenceKey);
-        string finalEncrypted = AtbashCipher.Transform(s5);
-        Console.WriteLine($"Final Encrypted Text: {finalEncrypted}");
+        string encrypted = AdfgvxCipher.Encrypt(text, gridKey, transKey);
+        Console.WriteLine($"Encrypted: {encrypted}");
+        Console.WriteLine($"Decrypted: {AdfgvxCipher.Decrypt(encrypted, gridKey, transKey)}");
+    }
 
-        // Decryption Order: (Reverse of Encryption)
-        Console.WriteLine("\nDecrypting...");
-        string d1 = AtbashCipher.Transform(finalEncrypted);
-        string d2 = RailFenceCipher.Decrypt(d1, railFenceKey);
-        string d3 = PolybiusSquareCipher.Decrypt(d2);
-        string d4 = CaesarCipher.Decrypt(d3, caesarKey);
-        string d5 = VigenereCipher.Decrypt(d4, vigenereKey);
-        string finalDecrypted = SimpleSubstitutionCipher.Decrypt(d5, simpleSubKey);
-        Console.WriteLine($"Final Decrypted Text: {finalDecrypted}");
+    private static void RunEnigmaMachine()
+    {
+        Console.WriteLine("\n--- Enigma Machine Simulator ---");
+        string r3_choice = GetRotorChoice("slow", new List<string>());
+        string r2_choice = GetRotorChoice("medium", new List<string> { r3_choice });
+        string r1_choice = GetRotorChoice("fast", new List<string> { r3_choice, r2_choice });
+        Console.Write($"Choose Reflector ({string.Join(", ", Reflectors.Keys)}): ");
+        string reflector_choice = GetStringKey("").ToUpper();
+        if (!Reflectors.ContainsKey(reflector_choice)) reflector_choice = "B";
+        int r3_pos = GetCharKey($"Enter slow rotor ({r3_choice}) start position (A-Z): ") - 'A';
+        int r2_pos = GetCharKey($"Enter medium rotor ({r2_choice}) start position (A-Z): ") - 'A';
+        int r1_pos = GetCharKey($"Enter fast rotor ({r1_choice}) start position (A-Z): ") - 'A';
+        int r3_ring = GetIntKey($"Enter slow rotor ({r3_choice}) ring setting (1-26): ", 1, 26) - 1;
+        int r2_ring = GetIntKey($"Enter medium rotor ({r2_choice}) ring setting (1-26): ", 1, 26) - 1;
+        int r1_ring = GetIntKey($"Enter fast rotor ({r1_choice}) ring setting (1-26): ", 1, 26) - 1;
+        Console.Write("Enter plugboard pairs (e.g., 'AB CD EF') or leave blank: ");
+        string plugboard_pairs = GetStringKey("");
+        Console.Write("Enter text to transform: ");
+        string text = GetStringKey("");
+        EnigmaRotor rotor3 = new EnigmaRotor(Rotors[r3_choice].Item1, Rotors[r3_choice].Item2, r3_pos, r3_ring);
+        EnigmaRotor rotor2 = new EnigmaRotor(Rotors[r2_choice].Item1, Rotors[r2_choice].Item2, r2_pos, r2_ring);
+        EnigmaRotor rotor1 = new EnigmaRotor(Rotors[r1_choice].Item1, Rotors[r1_choice].Item2, r1_pos, r1_ring);
+        EnigmaMachine machine = new EnigmaMachine(rotor1, rotor2, rotor3, Reflectors[reflector_choice], plugboard_pairs);
+        string transformed = machine.Transform(text);
+        Console.WriteLine($"Transformed Text: {transformed}");
     }
 
     private static void ShowCipherHistory()
     {
         Console.WriteLine("\n--- View Cipher History ---");
         Console.WriteLine("Select a cipher to view its history:");
-        var types = Enum.GetValues(typeof(CipherType));
+
+        var types = Enum.GetValues<CipherType>();
+
         for (int i = 0; i < types.Length; i++)
         {
-            Console.WriteLine($"{i + 1}. {types.GetValue(i)}");
+            Console.WriteLine($"{i + 1}. {types[i]}");
         }
         Console.Write($"Enter your choice (1-{types.Length}): ");
 
         if (int.TryParse(Console.ReadLine(), out int choice) && choice > 0 && choice <= types.Length)
         {
-            CipherType selected = (CipherType)types.GetValue(choice - 1);
+            CipherType selected = types[choice - 1];
             Console.Clear();
             Console.WriteLine($"\n--- History of {selected} ---");
             Console.WriteLine(CipherHistory.GetHistory(selected));
@@ -169,14 +211,39 @@ public class Program
     }
 
     // Helper methods for input
-    private static int GetIntKey(string prompt)
+    private static int GetIntKey(string prompt, int min = int.MinValue, int max = int.MaxValue)
     {
         int key;
         while (true)
         {
             Console.Write(prompt);
-            if (int.TryParse(Console.ReadLine(), out key)) return key;
-            Console.WriteLine("Invalid input. Please enter a whole number.");
+            if (int.TryParse(Console.ReadLine(), out key) && key >= min && key <= max) return key;
+            Console.WriteLine($"Invalid input. Please enter a whole number.");
+        }
+    }
+
+    private static char GetCharKey(string prompt)
+    {
+        char key;
+        while (true)
+        {
+            Console.Write(prompt);
+            string input = GetStringKey("");
+            if (input.Length == 1 && char.IsLetter(input[0])) return char.ToUpper(input[0]);
+            Console.WriteLine("Invalid input. Please enter a single letter (A-Z).");
+        }
+    }
+
+    private static string GetRotorChoice(string rotorName, List<string> used)
+    {
+        string choice;
+        var available = Rotors.Keys.Except(used).ToList();
+        while (true)
+        {
+            Console.Write($"Choose {rotorName} rotor ({string.Join(", ", available)}): ");
+            choice = GetStringKey("").ToUpper();
+            if (available.Contains(choice)) return choice;
+            Console.WriteLine("Invalid or duplicate rotor choice.");
         }
     }
 
