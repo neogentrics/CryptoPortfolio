@@ -31,6 +31,35 @@ public static class HillCipher
         return -1; // Inverse does not exist
     }
 
+    /// <summary>
+    /// Builds the 2x2 key matrix from a 4-letter key, reading left-to-right, top-to-bottom.
+    /// </summary>
+    private static int[,] BuildMatrix(string key)
+    {
+        int[,] matrix = new int[2, 2];
+        int k = 0;
+        for (int i = 0; i < 2; i++)
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                matrix[i, j] = char.ToUpper(key[k++]) - 'A';
+            }
+        }
+        return matrix;
+    }
+
+    /// <summary>
+    /// Returns true if <paramref name="key"/> is a usable Hill key, i.e. it is four letters
+    /// long and its matrix is invertible modulo 26 (so ciphertext can actually be decrypted).
+    /// Callers deriving keys programmatically should check this before encrypting.
+    /// </summary>
+    public static bool IsKeyValid(string key)
+    {
+        if (string.IsNullOrEmpty(key) || key.Length != 4) return false;
+        if (!key.All(char.IsLetter)) return false;
+        return IsMatrixInvertible(BuildMatrix(key), out _);
+    }
+
     private static bool IsMatrixInvertible(int[,] matrix, out int detInverse)
     {
         int det = (matrix[0, 0] * matrix[1, 1] - matrix[0, 1] * matrix[1, 0]) % 26;
@@ -73,15 +102,7 @@ public static class HillCipher
     {
         if (key.Length != 4) return "Error: Key must be 4 characters long.";
 
-        int[,] keyMatrix = new int[2, 2];
-        int k = 0;
-        for (int i = 0; i < 2; i++)
-        {
-            for (int j = 0; j < 2; j++)
-            {
-                keyMatrix[i, j] = char.ToUpper(key[k++]) - 'A';
-            }
-        }
+        int[,] keyMatrix = BuildMatrix(key);
 
         if (!IsMatrixInvertible(keyMatrix, out _))
         {
@@ -95,15 +116,7 @@ public static class HillCipher
     {
         if (key.Length != 4) return "Error: Key must be 4 characters long.";
 
-        int[,] keyMatrix = new int[2, 2];
-        int k = 0;
-        for (int i = 0; i < 2; i++)
-        {
-            for (int j = 0; j < 2; j++)
-            {
-                keyMatrix[i, j] = char.ToUpper(key[k++]) - 'A';
-            }
-        }
+        int[,] keyMatrix = BuildMatrix(key);
 
         if (!IsMatrixInvertible(keyMatrix, out int detInverse))
         {

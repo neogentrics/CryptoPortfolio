@@ -23,7 +23,7 @@ public class Program
             Console.WriteLine("14. Diffie-Hellman Key Exchange");
 
             Console.WriteLine("\n--- Custom Systems ---");
-            Console.WriteLine("15. Dark Cancer Cipher (Layered System)"); 
+            Console.WriteLine("15. Aegis Cipher (Layered System)");
 
             Console.WriteLine("\n--- Utilities ---");
             Console.WriteLine("16. View Cipher History");
@@ -48,7 +48,7 @@ public class Program
                 case "12": MenuRunners.RunHillCipher(); break;
                 case "13": MenuRunners.RunEnigmaMachine(); break;
                 case "14": DiffieHellmanKeyExchange.RunExchange(); break; // Corrected call
-                case "15": MenuRunners.RunDarkCancerCipher(); break; // New Case
+                case "15": MenuRunners.RunAegisCipher(); break;
                 case "16": MenuRunners.ShowCipherHistory(); break;
                 case "17": Console.WriteLine("Exiting program. Goodbye!"); return;
                 default: Console.WriteLine("Invalid choice."); break;

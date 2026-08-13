@@ -19,13 +19,19 @@ using System.Text;
 /// </summary>
 public static class PlayfairCipher
 {
-    private static char[,] _keyTable = new char[5, 5];
-    private static Dictionary<char, Point> _charPositions = new Dictionary<char, Point>();
-
-    private static void GenerateKeyTable(string keyword)
+    /// <summary>
+    /// Builds the 5x5 Playfair square for a keyword.
+    ///
+    /// The table is returned per call rather than held in static fields. It used to be static,
+    /// which made the cipher unsafe to use from more than one thread: two callers encrypting
+    /// with different keywords at the same time would overwrite each other's square mid-operation
+    /// and silently produce wrong output.
+    /// </summary>
+    private static (char[,] Table, Dictionary<char, Point> Positions) GenerateKeyTable(string keyword)
     {
-        _keyTable = new char[5, 5];
-        _charPositions = new Dictionary<char, Point>();
+        char[,] table = new char[5, 5];
+        Dictionary<char, Point> positions = new();
+
         string key = string.Concat(keyword.ToUpper().Replace("J", "I").Distinct());
         string alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
         string keyString = key + string.Concat(alphabet.Except(key));
@@ -36,10 +42,12 @@ public static class PlayfairCipher
             for (int c = 0; c < 5; c++)
             {
                 char character = keyString[index++];
-                _keyTable[r, c] = character;
-                _charPositions[character] = new Point(c, r);
+                table[r, c] = character;
+                positions[character] = new Point(c, r);
             }
         }
+
+        return (table, positions);
     }
 
     private static string PrepareText(string text)
@@ -66,30 +74,30 @@ public static class PlayfairCipher
         return preparedText.ToString();
     }
 
-    private static string ProcessDigraphs(string text, int direction)
+    private static string ProcessDigraphs(string text, int direction, char[,] table, Dictionary<char, Point> positions)
     {
         StringBuilder result = new StringBuilder();
-        for (int i = 0; i < text.Length; i += 2)
+        for (int i = 0; i + 1 < text.Length; i += 2)
         {
             char a = text[i];
             char b = text[i + 1];
-            Point posA = _charPositions[a];
-            Point posB = _charPositions[b];
+            Point posA = positions[a];
+            Point posB = positions[b];
 
             if (posA.Y == posB.Y) // Same row
             {
-                result.Append(_keyTable[posA.Y, (posA.X + direction + 5) % 5]);
-                result.Append(_keyTable[posB.Y, (posB.X + direction + 5) % 5]);
+                result.Append(table[posA.Y, (posA.X + direction + 5) % 5]);
+                result.Append(table[posB.Y, (posB.X + direction + 5) % 5]);
             }
             else if (posA.X == posB.X) // Same column
             {
-                result.Append(_keyTable[(posA.Y + direction + 5) % 5, posA.X]);
-                result.Append(_keyTable[(posB.Y + direction + 5) % 5, posB.X]);
+                result.Append(table[(posA.Y + direction + 5) % 5, posA.X]);
+                result.Append(table[(posB.Y + direction + 5) % 5, posB.X]);
             }
             else // Rectangle
             {
-                result.Append(_keyTable[posA.Y, posB.X]);
-                result.Append(_keyTable[posB.Y, posA.X]);
+                result.Append(table[posA.Y, posB.X]);
+                result.Append(table[posB.Y, posA.X]);
             }
         }
         return result.ToString();
@@ -97,15 +105,15 @@ public static class PlayfairCipher
 
     public static string Encrypt(string plainText, string keyword)
     {
-        GenerateKeyTable(keyword);
+        var (table, positions) = GenerateKeyTable(keyword);
         string preparedText = PrepareText(plainText);
-        return ProcessDigraphs(preparedText, 1); // 1 for encryption (move right/down)
+        return ProcessDigraphs(preparedText, 1, table, positions); // 1 for encryption (move right/down)
     }
 
     public static string Decrypt(string cipherText, string keyword)
     {
-        GenerateKeyTable(keyword);
+        var (table, positions) = GenerateKeyTable(keyword);
         // Decryption doesn't need text preparation
-        return ProcessDigraphs(cipherText.ToUpper(), -1); // -1 for decryption (move left/up)
+        return ProcessDigraphs(cipherText.ToUpper(), -1, table, positions); // -1 for decryption (move left/up)
     }
 }

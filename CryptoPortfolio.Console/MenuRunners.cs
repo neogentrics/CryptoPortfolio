@@ -226,19 +226,20 @@ public static class MenuRunners
         }
     }
 
-    public static void RunDarkCancerCipher()
+    public static void RunAegisCipher()
     {
-        Console.WriteLine("\n--- Dark Cancer Cipher (Custom Layered System) ---");
+        Console.WriteLine("\n--- Aegis Cipher (Custom Layered System) ---");
         Console.Write("Enter text: ");
         string text = InputHelpers.GetStringKey("");
         Console.Write("Enter master keyword (min 8 chars): ");
         string key = InputHelpers.GetStringKey("");
 
-        string encrypted = CustomLayeredCipher.Encrypt(text, key);
+        string encrypted = AegisCipher.Encrypt(text, key, Console.WriteLine);
 
         if (!encrypted.StartsWith("Error:"))
         {
-            CustomLayeredCipher.Decrypt(encrypted, key);
+            AegisCipher.Decrypt(encrypted, key, Console.WriteLine);
+            Console.WriteLine($"\nNote: {AegisCipher.NormalisationNotice}");
         }
         else
         {

@@ -18,7 +18,8 @@ This tool allows you to explore and use the following algorithms, each implement
 * **Transposition:** Rail Fence, Columnar Transposition.
 * **Fractionation & Product Ciphers:** Polybius Square, Bifid, ADFGVX.
 * **Matrix-Based Cipher:** Hill Cipher (2x2).
-* **Electro-Mechanical Simulation:** A detailed simulation of the WWII Enigma Machine (M3 Army model).
+* **Electro-Mechanical Simulation:** A detailed simulation of the WWII Enigma Machine (M3 Army model), verified against the historical Enigma I test vectors.
+* **Custom Layered System:** The **Aegis Cipher**, which derives every sub-key from a single master keyword and chains ten classical layers.
 * **Modern Concepts:** A demonstration of the Diffie-Hellman Key Exchange protocol.
 * **Cipher History Viewer:** An interactive menu to read about the origin and purpose of each implemented algorithm.
 
@@ -27,8 +28,9 @@ This tool allows you to explore and use the following algorithms, each implement
 ## Technology Stack
 
 * **Language:** C#
-* **Framework:** .NET 
+* **Framework:** .NET 9 (cross-platform — runs on Windows, macOS and Linux)
 * **Development Environment:** Visual Studio
+* **Testing:** xUnit
 
 ---
 
@@ -38,9 +40,9 @@ This tool allows you to explore and use the following algorithms, each implement
 
 1.  Clone the repository to your local machine:
     ```bash
-    git clone [https://github.com/neogentrics/CryptoPortfolio.git](https://github.com/neogentrics/CryptoPortfolio.git)
+    git clone https://github.com/neogentrics/CryptoPortfolio.git
     ```
-2.  Open the solution file (`CryptoPortfolio.sln`) in Visual Studio.
+2.  Open the solution file (`ClassicCiphers.sln`) in Visual Studio.
 
 ### How to Use
 
@@ -49,6 +51,33 @@ This tool allows you to explore and use the following algorithms, each implement
 3.  Enter the number corresponding to your desired option and press Enter.
 4.  Follow the on-screen prompts to provide plaintext, keywords, or other required settings.
 5.  The application will display the result of the cryptographic operation and, where applicable, the decrypted result to verify its correctness.
+
+### From the command line
+
+```bash
+dotnet run --project CryptoPortfolio.Console
+```
+
+### Running the tests
+
+```bash
+dotnet test
+```
+
+The suite covers round-trip correctness for every cipher, the Enigma's historical test vectors,
+Hill key invertibility, and thread safety of the keyed-square ciphers.
+
+---
+
+## A Note on Security
+
+These are **historical ciphers, implemented for study**. Every one of them is broken by modern
+standards, most of them by pen and paper. Nothing here should be used to protect real data.
+
+That applies to the Aegis Cipher too. Chaining classical ciphers does not compound their
+strength — the composition of substitution and transposition steps is still a classical product
+cipher, vulnerable to the same statistical attacks as its parts. Aegis is a study in cipher
+composition, key derivation and invertibility, not a secure cryptosystem.
 
 ---
 
@@ -63,8 +92,11 @@ This project is developed in phases. Here is the current status:
 * **[x]** Implement matrix-based cryptography with the Hill Cipher.
 * **[x]** Demonstrate modern key-exchange principles with Diffie-Hellman.
 
-### ➡️ Phase 2: Custom Cryptosystem Design (In Progress)
-* **[ ]** Design and implement a unique, proprietary layered cipher system using the implemented classic ciphers, all derived from a single master keyword.
+### ✅ Phase 2: Custom Cryptosystem Design (Complete)
+* **[x]** Design and implement the **Aegis Cipher**, a layered system built from the implemented classic ciphers, with every sub-key derived from a single master keyword.
+* **[x]** Guarantee invertibility: normalise the message once up front, then order the layers so the shape-sensitive ciphers (Playfair, Four-Square, Bifid, Hill) run before the transpositions, and the full-alphabet ciphers run last.
+* **[x]** Derive the Hill key programmatically, searching for a matrix that is invertible modulo 26.
+* **[x]** Cover the whole stack with round-trip and concurrency tests.
 
 ### ⏳ Phase 3: Bridge to Modernity (Up Next)
 * **[ ]** Implement a **Simplified AES** (Block Cipher) to understand Substitution-Permutation Networks.

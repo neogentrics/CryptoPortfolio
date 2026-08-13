@@ -19,19 +19,24 @@ using System.Text;
 /// </summary>
 public static class FourSquareCipher
 {
-    private static readonly char[,] PlaintextGrid1 = new char[5, 5];
-    private static readonly char[,] PlaintextGrid2 = new char[5, 5];
-    private static readonly char[,] CiphertextGrid1 = new char[5, 5];
-    private static readonly char[,] CiphertextGrid2 = new char[5, 5];
+    /// <summary>
+    /// The four squares this cipher needs, built fresh for each operation.
+    ///
+    /// These used to be static fields shared across every call, which made the cipher unsafe to
+    /// use from more than one thread: two callers encrypting with different keywords at the same
+    /// time would overwrite each other's grids mid-operation and silently produce wrong output.
+    /// </summary>
+    private sealed record Squares(
+        char[,] Plain1, Dictionary<char, Point> Plain1Pos,
+        char[,] Plain2, Dictionary<char, Point> Plain2Pos,
+        char[,] Cipher1, Dictionary<char, Point> Cipher1Pos,
+        char[,] Cipher2, Dictionary<char, Point> Cipher2Pos);
 
-    private static readonly Dictionary<char, Point> Plaintext1Pos = new Dictionary<char, Point>();
-    private static readonly Dictionary<char, Point> Plaintext2Pos = new Dictionary<char, Point>();
-    private static readonly Dictionary<char, Point> Ciphertext1Pos = new Dictionary<char, Point>();
-    private static readonly Dictionary<char, Point> Ciphertext2Pos = new Dictionary<char, Point>();
-
-    private static void GenerateGrid(string keyword, char[,] grid, Dictionary<char, Point> positions)
+    private static (char[,] Grid, Dictionary<char, Point> Positions) GenerateGrid(string keyword)
     {
-        positions.Clear();
+        char[,] grid = new char[5, 5];
+        Dictionary<char, Point> positions = new();
+
         string alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ"; // Omitting J
         string key = string.Concat((keyword + alphabet).ToUpper().Replace("J", "").Distinct());
 
@@ -45,14 +50,17 @@ public static class FourSquareCipher
                 positions[character] = new Point(c, r);
             }
         }
+
+        return (grid, positions);
     }
 
-    private static void InitializeGrids(string key1, string key2)
+    private static Squares InitializeGrids(string key1, string key2)
     {
-        GenerateGrid("", PlaintextGrid1, Plaintext1Pos); // Standard alphabet
-        GenerateGrid("", PlaintextGrid2, Plaintext2Pos); // Standard alphabet
-        GenerateGrid(key1, CiphertextGrid1, Ciphertext1Pos); // Keyword 1
-        GenerateGrid(key2, CiphertextGrid2, Ciphertext2Pos); // Keyword 2
+        var (p1, p1Pos) = GenerateGrid(""); // Standard alphabet
+        var (p2, p2Pos) = GenerateGrid(""); // Standard alphabet
+        var (c1, c1Pos) = GenerateGrid(key1); // Keyword 1
+        var (c2, c2Pos) = GenerateGrid(key2); // Keyword 2
+        return new Squares(p1, p1Pos, p2, p2Pos, c1, c1Pos, c2, c2Pos);
     }
 
     private static string PrepareText(string text)
@@ -76,20 +84,20 @@ public static class FourSquareCipher
 
     public static string Encrypt(string plainText, string key1, string key2)
     {
-        InitializeGrids(key1, key2);
+        Squares s = InitializeGrids(key1, key2);
         string preparedText = PrepareText(plainText);
         StringBuilder cipherText = new StringBuilder();
 
-        for (int i = 0; i < preparedText.Length; i += 2)
+        for (int i = 0; i + 1 < preparedText.Length; i += 2)
         {
             char char1 = preparedText[i];
             char char2 = preparedText[i + 1];
 
-            Point pos1 = Plaintext1Pos[char1];
-            Point pos2 = Plaintext2Pos[char2];
+            Point pos1 = s.Plain1Pos[char1];
+            Point pos2 = s.Plain2Pos[char2];
 
-            cipherText.Append(CiphertextGrid1[pos1.Y, pos2.X]);
-            cipherText.Append(CiphertextGrid2[pos2.Y, pos1.X]);
+            cipherText.Append(s.Cipher1[pos1.Y, pos2.X]);
+            cipherText.Append(s.Cipher2[pos2.Y, pos1.X]);
         }
 
         return cipherText.ToString();
@@ -97,25 +105,23 @@ public static class FourSquareCipher
 
     public static string Decrypt(string cipherText, string key1, string key2)
     {
-        InitializeGrids(key1, key2);
+        Squares s = InitializeGrids(key1, key2);
 
-        // --- THIS IS THE FIX ---
-        // We must convert the incoming ciphertext to uppercase to match the dictionary keys.
+        // Uppercase the incoming ciphertext so it matches the grid dictionary keys.
         cipherText = cipherText.ToUpper();
 
         StringBuilder plainText = new StringBuilder();
 
-        for (int i = 0; i < cipherText.Length; i += 2)
+        for (int i = 0; i + 1 < cipherText.Length; i += 2)
         {
             char char1 = cipherText[i];
             char char2 = cipherText[i + 1];
 
-            // This will no longer crash because char1 and char2 are now uppercase.
-            Point pos1 = Ciphertext1Pos[char1];
-            Point pos2 = Ciphertext2Pos[char2];
+            Point pos1 = s.Cipher1Pos[char1];
+            Point pos2 = s.Cipher2Pos[char2];
 
-            plainText.Append(PlaintextGrid1[pos1.Y, pos2.X]);
-            plainText.Append(PlaintextGrid2[pos2.Y, pos1.X]);
+            plainText.Append(s.Plain1[pos1.Y, pos2.X]);
+            plainText.Append(s.Plain2[pos2.Y, pos1.X]);
         }
 
         return plainText.ToString();
