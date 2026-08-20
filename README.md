@@ -10,17 +10,15 @@ This project is a comprehensive, interactive C#/.NET console application designe
 
 ## Key Features
 
-This tool allows you to explore and use the following algorithms, each implemented with its historical context available right in the app:
+**38 catalogued algorithms**, each implemented from scratch with its historical context readable right in the app:
 
-* **Simple Substitution:** Atbash, Caesar, Simple Substitution (Keyword).
-* **Polyalphabetic Substitution:** Vigenère.
-* **Digraphic Substitution:** Playfair, Four-Square.
-* **Transposition:** Rail Fence, Columnar Transposition.
-* **Fractionation & Product Ciphers:** Polybius Square, Bifid, ADFGVX.
-* **Matrix-Based Cipher:** Hill Cipher (2x2).
-* **Electro-Mechanical Simulation:** A detailed simulation of the WWII Enigma Machine (M3 Army model), verified against the historical Enigma I test vectors.
+* **Monoalphabetic Substitution:** Caesar, Atbash, Simple Substitution (Keyword), Affine, ROT13, A1Z26, Bacon's Cipher, Pigpen (Masonic).
+* **Polyalphabetic Substitution:** Vigenère, Beaufort, Gronsfeld, Autokey, Porta, Running Key, Trithemius, One-Time Pad (Vernam).
+* **Transposition:** Rail Fence, Columnar, Double Columnar, Myszkowski, Scytale, Route (spiral).
+* **Polygraphic & Fractionation:** Playfair, Two-Square, Four-Square, Hill (2x2), Polybius Square, Bifid, Trifid, Nihilist, Straddling Checkerboard, ADFGX, ADFGVX.
+* **Machine Ciphers & Key Exchange:** WWII Enigma Machine (M3 Army model), verified against the historical Enigma I test vectors; Diffie-Hellman Key Exchange.
+* **Encodings:** Morse Code, Base64. Included deliberately — both are routinely mistaken for encryption, and telling an encoding from a cipher matters in real security work.
 * **Custom Layered System:** The **Aegis Cipher**, which derives every sub-key from a single master keyword and chains ten classical layers.
-* **Modern Concepts:** A demonstration of the Diffie-Hellman Key Exchange protocol.
 * **Cipher History Viewer:** An interactive menu to read about the origin and purpose of each implemented algorithm.
 
 ---
@@ -64,8 +62,10 @@ dotnet run --project CryptoPortfolio.Console
 dotnet test
 ```
 
-The suite covers round-trip correctness for every cipher, the Enigma's historical test vectors,
-Hill key invertibility, and thread safety of the keyed-square ciphers.
+The suite covers round-trip correctness for every cipher, published test vectors (Enigma I,
+Affine, Autokey, Myszkowski, Base64, Morse), Hill key invertibility, thread safety of the
+keyed-square ciphers, and structural properties such as Porta's half-alphabet swap and Trifid's
+diffusion. Every entry in the catalogue is checked to have a history entry.
 
 ---
 
@@ -97,6 +97,11 @@ This project is developed in phases. Here is the current status:
 * **[x]** Guarantee invertibility: normalise the message once up front, then order the layers so the shape-sensitive ciphers (Playfair, Four-Square, Bifid, Hill) run before the transpositions, and the full-alphabet ciphers run last.
 * **[x]** Derive the Hill key programmatically, searching for a matrix that is invertible modulo 26.
 * **[x]** Cover the whole stack with round-trip and concurrency tests.
+
+### ✅ Phase 2b: Complete the Classical Corpus (Complete)
+* **[x]** Extend the catalogue to 38 algorithms spanning every major classical family.
+* **[x]** Group the console menu by cipher family rather than one flat list.
+* **[x]** Include Morse and Base64 as explicitly labelled *encodings*, to make the encoding/encryption distinction concrete.
 
 ### ⏳ Phase 3: Bridge to Modernity (Up Next)
 * **[ ]** Implement a **Simplified AES** (Block Cipher) to understand Substitution-Permutation Networks.

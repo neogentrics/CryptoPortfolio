@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// A static class to provide historical information about each cipher.
 /// </summary>
-public static class CipherHistory
+public static partial class CipherHistory
 {
     public static string GetHistory(CipherType type)
     {
@@ -188,7 +188,8 @@ and represented a new era of mathematical cryptography.";
 
 
             default:
-                return "No history found for this cipher.";
+                // Ciphers added after the original set live in CipherHistory.Extended.cs
+                return GetExtendedHistory(type);
         }
     }
 }

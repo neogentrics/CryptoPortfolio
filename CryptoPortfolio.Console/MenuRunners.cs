@@ -6,7 +6,7 @@ using System.Linq;
 /// <summary>
 /// Contains the runner methods for each cipher option in the main menu.
 /// </summary>
-public static class MenuRunners
+public static partial class MenuRunners
 {
     // Storing historical Enigma components here now
     private static readonly Dictionary<string, (string, char)> Rotors = new Dictionary<string, (string, char)>

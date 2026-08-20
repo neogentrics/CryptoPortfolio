@@ -21,7 +21,6 @@ public static class InputHelpers
 
     public static char GetCharKey(string prompt)
     {
-        char key;
         while (true)
         {
             Console.Write(prompt);
