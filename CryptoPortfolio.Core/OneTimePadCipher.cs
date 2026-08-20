@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -44,8 +44,8 @@ public static class OneTimePadCipher
 
     private static string Combine(string text, string pad, int direction)
     {
-        string key = new((pad ?? "").ToUpper().Where(char.IsLetter).ToArray());
-        int required = (text ?? "").Count(char.IsLetter);
+        string key = new((pad ?? "").ToUpperInvariant().Where(char.IsAsciiLetter).ToArray());
+        int required = (text ?? "").Count(char.IsAsciiLetter);
 
         if (key.Length < required)
         {
@@ -58,13 +58,13 @@ public static class OneTimePadCipher
 
         foreach (char c in text ?? "")
         {
-            if (!char.IsLetter(c))
+            if (!char.IsAsciiLetter(c))
             {
                 result.Append(c);
                 continue;
             }
 
-            char baseChar = char.IsUpper(c) ? 'A' : 'a';
+            char baseChar = char.IsAsciiLetterUpper(c) ? 'A' : 'a';
             int k = (key[keyIndex] - 'A') * direction;
 
             result.Append((char)(baseChar + ((c - baseChar + k) % 26 + 26) % 26));

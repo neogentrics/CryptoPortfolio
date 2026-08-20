@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -38,7 +38,7 @@ public static class AdfgvxCipher
         Dictionary<char, (int, int)> positions = new();
 
         string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        string key = string.Concat(((gridKeyword ?? "") + alphabet).ToUpper().Distinct());
+        string key = string.Concat(((gridKeyword ?? "") + alphabet).ToUpperInvariant().Distinct());
 
         int index = 0;
         for (int r = 0; r < 6; r++)
@@ -60,7 +60,7 @@ public static class AdfgvxCipher
 
         // 1. Substitution Stage
         StringBuilder intermediateText = new StringBuilder();
-        foreach (char c in (plainText ?? "").ToUpper())
+        foreach (char c in (plainText ?? "").ToUpperInvariant())
         {
             if (positions.TryGetValue(c, out var cell))
             {

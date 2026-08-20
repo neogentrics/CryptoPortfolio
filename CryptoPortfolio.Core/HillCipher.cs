@@ -42,7 +42,7 @@ public static class HillCipher
         {
             for (int j = 0; j < 2; j++)
             {
-                matrix[i, j] = char.ToUpper(key[k++]) - 'A';
+                matrix[i, j] = char.ToUpperInvariant(key[k++]) - 'A';
             }
         }
         return matrix;
@@ -56,7 +56,7 @@ public static class HillCipher
     public static bool IsKeyValid(string key)
     {
         if (string.IsNullOrEmpty(key) || key.Length != 4) return false;
-        if (!key.All(char.IsLetter)) return false;
+        if (!key.All(char.IsAsciiLetter)) return false;
         return IsMatrixInvertible(BuildMatrix(key), out _);
     }
 
@@ -74,7 +74,7 @@ public static class HillCipher
         StringBuilder result = new StringBuilder();
 
         // This is the corrected line. It uses LINQ to filter the string.
-        text = new string(text.ToUpper().Where(char.IsLetter).ToArray());
+        text = new string(text.ToUpperInvariant().Where(char.IsAsciiLetter).ToArray());
 
         if (text.Length % 2 != 0)
         {

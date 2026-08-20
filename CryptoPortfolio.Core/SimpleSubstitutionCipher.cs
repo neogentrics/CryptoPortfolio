@@ -21,7 +21,7 @@ public static class SimpleSubstitutionCipher
     public static string GenerateCipherAlphabet(string keyword)
     {
         string standardAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        string uniqueKeyword = string.Concat(keyword.ToUpper().Distinct());
+        string uniqueKeyword = string.Concat(keyword.ToUpperInvariant().Distinct());
         StringBuilder cipherAlphabet = new StringBuilder(uniqueKeyword);
 
         foreach (char c in standardAlphabet)
@@ -42,12 +42,12 @@ public static class SimpleSubstitutionCipher
 
         foreach (char c in plainText)
         {
-            char upperC = char.ToUpper(c);
+            char upperC = char.ToUpperInvariant(c);
             int index = standardAlphabet.IndexOf(upperC);
             if (index != -1)
             {
                 char encryptedChar = cipherAlphabet[index];
-                result.Append(char.IsUpper(c) ? encryptedChar : char.ToLower(encryptedChar));
+                result.Append(char.IsAsciiLetterUpper(c) ? encryptedChar : char.ToLowerInvariant(encryptedChar));
             }
             else
             {
@@ -65,12 +65,12 @@ public static class SimpleSubstitutionCipher
 
         foreach (char c in cipherText)
         {
-            char upperC = char.ToUpper(c);
+            char upperC = char.ToUpperInvariant(c);
             int index = cipherAlphabet.IndexOf(upperC);
             if (index != -1)
             {
                 char decryptedChar = standardAlphabet[index];
-                result.Append(char.IsUpper(c) ? decryptedChar : char.ToLower(decryptedChar));
+                result.Append(char.IsAsciiLetterUpper(c) ? decryptedChar : char.ToLowerInvariant(decryptedChar));
             }
             else
             {

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -51,7 +51,7 @@ public static class MorseCode
 
     public static string Encode(string text)
     {
-        var words = (text ?? "").ToUpper().Split(' ', System.StringSplitOptions.RemoveEmptyEntries);
+        var words = (text ?? "").ToUpperInvariant().Split(' ', System.StringSplitOptions.RemoveEmptyEntries);
 
         var encodedWords = words.Select(word =>
             string.Join(" ", word.Where(ToMorse.ContainsKey).Select(c => ToMorse[c])));

@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 
 /// <summary>
 /// Implements the Trithemius Cipher.
@@ -7,8 +7,8 @@ using System.Text;
 /// Published by the German abbot Johannes Trithemius in "Polygraphia" (1518), the first printed
 /// book on cryptography. Trithemius introduced the tabula recta - the 26x26 grid of shifted
 /// alphabets that underpins the entire Vigenere family. His other work, "Steganographia", was
-/// disguised as a treatise on angel magic and sat on the Church's banned list for two centuries
-/// before anyone realised it was a cryptography manual.
+/// disguised as a treatise on angel magic. It was placed on the Index Librorum Prohibitorum in
+/// 1609 and stayed there until 1900, long after its cryptographic content was understood.
 ///
 /// Purpose:
 /// Each successive letter is shifted one place further than the last: the first by 0, the second
@@ -27,13 +27,13 @@ public static class TrithemiusCipher
 
         foreach (char c in text ?? "")
         {
-            if (!char.IsLetter(c))
+            if (!char.IsAsciiLetter(c))
             {
                 result.Append(c);
                 continue;
             }
 
-            char baseChar = char.IsUpper(c) ? 'A' : 'a';
+            char baseChar = char.IsAsciiLetterUpper(c) ? 'A' : 'a';
             int shift = position * direction;
 
             result.Append((char)(baseChar + ((c - baseChar + shift) % 26 + 26) % 26));

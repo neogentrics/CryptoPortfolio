@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 
 /// <summary>
@@ -26,7 +26,7 @@ public static class BeaufortCipher
     /// </summary>
     public static string Transform(string text, string keyword)
     {
-        string key = new((keyword ?? "").ToUpper().Where(char.IsLetter).ToArray());
+        string key = new((keyword ?? "").ToUpperInvariant().Where(char.IsAsciiLetter).ToArray());
         if (key.Length == 0) return "Error: Keyword must contain at least one letter.";
 
         StringBuilder result = new();
@@ -34,13 +34,13 @@ public static class BeaufortCipher
 
         foreach (char c in text ?? "")
         {
-            if (!char.IsLetter(c))
+            if (!char.IsAsciiLetter(c))
             {
                 result.Append(c);
                 continue;
             }
 
-            char baseChar = char.IsUpper(c) ? 'A' : 'a';
+            char baseChar = char.IsAsciiLetterUpper(c) ? 'A' : 'a';
             int k = key[keyIndex % key.Length] - 'A';
             int p = c - baseChar;
 

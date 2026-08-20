@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -7,8 +7,8 @@ using System.Text;
 ///
 /// History:
 /// A Soviet intelligence staple, forming the substitution stage of the VIC cipher carried by
-/// agent Reino Hayhanen and of the earlier Nihilist systems. It was designed for agents working
-/// from memory with nothing incriminating in writing, and remained in use into the 1960s.
+/// agent Reino Hayhanen, who defected in 1957 and explained the system to the FBI. Checkerboard
+/// substitution suited agents working from memory, with nothing incriminating in writing.
 ///
 /// Purpose:
 /// The checkerboard converts letters to digits with VARIABLE length: the eight most frequent
@@ -88,7 +88,7 @@ public static class StraddlingCheckerboardCipher
         var encodeMap = decodeMap.ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
 
         StringBuilder result = new();
-        foreach (char c in (plainText ?? "").ToUpper())
+        foreach (char c in (plainText ?? "").ToUpperInvariant())
         {
             // All 26 letters fit: 8 in the single-digit row, 18 among the two-digit codes,
             // so unlike the Polybius family there is no need to fold J into I.

@@ -39,7 +39,7 @@ public static class PolybiusSquareCipher
     public static string Encrypt(string plainText)
     {
         StringBuilder cipherText = new StringBuilder();
-        foreach (char c in plainText.ToUpper())
+        foreach (char c in plainText.ToUpperInvariant())
         {
             if (_charToCoord.ContainsKey(c))
             {

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Text;
 
@@ -70,9 +70,9 @@ public static class AegisCipher
     {
         StringBuilder result = new();
 
-        foreach (char raw in (text ?? "").ToUpper())
+        foreach (char raw in (text ?? "").ToUpperInvariant())
         {
-            if (!char.IsLetter(raw)) continue;
+            if (!char.IsAsciiLetter(raw)) continue;
 
             char c = raw == 'J' ? 'I' : raw; // the 25-letter square has no J
 
@@ -103,7 +103,7 @@ public static class AegisCipher
     /// </summary>
     private static int BlockSize(string columnarKey)
     {
-        int columns = string.Concat(columnarKey.ToUpper().Distinct()).Length;
+        int columns = string.Concat(columnarKey.ToUpperInvariant().Distinct()).Length;
         return columns % 2 == 0 ? columns : columns * 2; // lcm(2, columns)
     }
 
@@ -118,9 +118,9 @@ public static class AegisCipher
     public static string DeriveHillKey(string masterKeyword)
     {
         int seed = 0;
-        foreach (char c in (masterKeyword ?? "").ToUpper())
+        foreach (char c in (masterKeyword ?? "").ToUpperInvariant())
         {
-            if (char.IsLetter(c))
+            if (char.IsAsciiLetter(c))
             {
                 seed = (seed * 31 + (c - 'A')) % HillKeySpace;
             }

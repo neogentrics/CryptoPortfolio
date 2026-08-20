@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -7,8 +7,8 @@ using System.Text;
 ///
 /// History:
 /// Pigpen dates to at least the 18th century and is most associated with Freemasonry, where it
-/// was used to keep lodge records and mark gravestones. It also saw field use by Union soldiers
-/// in the American Civil War, and versions appear in Templar and Rosicrucian documents.
+/// was used to keep lodge records and mark gravestones. Union prisoners of war used it to write
+/// home during the American Civil War, and versions appear in Templar and Rosicrucian documents.
 ///
 /// Purpose:
 /// Rather than substituting one letter for another, Pigpen substitutes a letter for a *shape*:
@@ -46,7 +46,7 @@ public static class PigpenCipher
     public static string Encrypt(string plainText)
     {
         StringBuilder result = new();
-        foreach (char c in (plainText ?? "").ToUpper())
+        foreach (char c in (plainText ?? "").ToUpperInvariant())
         {
             if (ToSymbol.TryGetValue(c, out char symbol)) result.Append(symbol);
             else if (char.IsWhiteSpace(c)) result.Append(' ');

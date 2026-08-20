@@ -38,7 +38,7 @@ public static class FourSquareCipher
         Dictionary<char, Point> positions = new();
 
         string alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ"; // Omitting J
-        string key = string.Concat((keyword + alphabet).ToUpper().Replace("J", "").Distinct());
+        string key = string.Concat((keyword + alphabet).ToUpperInvariant().Replace("J", "").Distinct());
 
         int index = 0;
         for (int r = 0; r < 5; r++)
@@ -66,9 +66,9 @@ public static class FourSquareCipher
     private static string PrepareText(string text)
     {
         StringBuilder preparedText = new StringBuilder();
-        foreach (char c in text.ToUpper())
+        foreach (char c in text.ToUpperInvariant())
         {
-            if (char.IsLetter(c))
+            if (char.IsAsciiLetter(c))
             {
                 preparedText.Append(c == 'J' ? 'I' : c);
             }
@@ -108,7 +108,7 @@ public static class FourSquareCipher
         Squares s = InitializeGrids(key1, key2);
 
         // Uppercase the incoming ciphertext so it matches the grid dictionary keys.
-        cipherText = cipherText.ToUpper();
+        cipherText = cipherText.ToUpperInvariant();
 
         StringBuilder plainText = new StringBuilder();
 

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -36,7 +36,7 @@ public static class AdfgxCipher
         Dictionary<char, (int, int)> positions = new();
 
         string alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ"; // Omitting J
-        string key = string.Concat(((gridKeyword ?? "") + alphabet).ToUpper().Replace("J", "I").Distinct());
+        string key = string.Concat(((gridKeyword ?? "") + alphabet).ToUpperInvariant().Replace("J", "I").Distinct());
 
         int index = 0;
         for (int r = 0; r < 5; r++)
@@ -58,7 +58,7 @@ public static class AdfgxCipher
 
         // 1. Substitution: each letter becomes a pair of coordinate letters.
         StringBuilder intermediate = new();
-        foreach (char c in (plainText ?? "").ToUpper().Replace("J", "I"))
+        foreach (char c in (plainText ?? "").ToUpperInvariant().Replace("J", "I"))
         {
             if (positions.TryGetValue(c, out var cell))
             {

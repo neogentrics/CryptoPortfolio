@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 
 /// <summary>
@@ -20,11 +20,11 @@ public static class A1Z26Cipher
 {
     public static string Encrypt(string plainText)
     {
-        var words = (plainText ?? "").ToUpper()
+        var words = (plainText ?? "").ToUpperInvariant()
             .Split(' ', System.StringSplitOptions.RemoveEmptyEntries);
 
         var encodedWords = words
-            .Select(word => string.Join("-", word.Where(char.IsLetter).Select(c => c - 'A' + 1)))
+            .Select(word => string.Join("-", word.Where(char.IsAsciiLetter).Select(c => c - 'A' + 1)))
             .Where(word => word.Length > 0);
 
         return string.Join(" ", encodedWords);

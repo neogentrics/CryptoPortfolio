@@ -21,9 +21,9 @@ public static class AtbashCipher
 
         foreach (char character in text)
         {
-            if (char.IsLetter(character))
+            if (char.IsAsciiLetter(character))
             {
-                char alphabetBase = char.IsUpper(character) ? 'A' : 'a';
+                char alphabetBase = char.IsAsciiLetterUpper(character) ? 'A' : 'a';
                 int offset = character - alphabetBase;
                 char transformedChar = (char)(alphabetBase + (25 - offset));
                 result.Append(transformedChar);

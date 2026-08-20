@@ -21,7 +21,7 @@ public static class ColumnarTranspositionCipher
 {
     public static string Encrypt(string plainText, string keyword)
     {
-        keyword = string.Concat(keyword.ToUpper().Distinct());
+        keyword = string.Concat(keyword.ToUpperInvariant().Distinct());
         if (string.IsNullOrEmpty(keyword)) return plainText;
 
         // Get the column order based on the keyword
@@ -58,7 +58,7 @@ public static class ColumnarTranspositionCipher
 
     public static string Decrypt(string cipherText, string keyword)
     {
-        keyword = string.Concat(keyword.ToUpper().Distinct());
+        keyword = string.Concat(keyword.ToUpperInvariant().Distinct());
         if (string.IsNullOrEmpty(keyword)) return cipherText;
 
         // Get the column order

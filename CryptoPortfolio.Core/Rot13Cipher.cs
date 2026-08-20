@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 
 /// <summary>
 /// Implements ROT13.
@@ -26,13 +26,13 @@ public static class Rot13Cipher
         StringBuilder result = new();
         foreach (char c in text ?? "")
         {
-            if (!char.IsLetter(c))
+            if (!char.IsAsciiLetter(c))
             {
                 result.Append(c);
                 continue;
             }
 
-            char baseChar = char.IsUpper(c) ? 'A' : 'a';
+            char baseChar = char.IsAsciiLetterUpper(c) ? 'A' : 'a';
             result.Append((char)(baseChar + (c - baseChar + 13) % 26));
         }
         return result.ToString();

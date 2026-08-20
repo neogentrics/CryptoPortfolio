@@ -31,10 +31,10 @@ public static class CaesarCipher
         foreach (char character in plainText)
         {
             // Only shift alphabetic characters; leave others (spaces, punctuation) as they are.
-            if (char.IsLetter(character))
+            if (char.IsAsciiLetter(character))
             {
                 // Determine the base character ('A' for uppercase, 'a' for lowercase).
-                char alphabetBase = char.IsUpper(character) ? 'A' : 'a';
+                char alphabetBase = char.IsAsciiLetterUpper(character) ? 'A' : 'a';
 
                 // Perform the shift calculation.
                 // 1. Get the 0-25 position of the character: (character - alphabetBase)

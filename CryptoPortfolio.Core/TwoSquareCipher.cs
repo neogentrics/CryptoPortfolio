@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -31,7 +31,7 @@ public static class TwoSquareCipher
         Dictionary<char, Point> positions = new();
 
         string alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ"; // Omitting J
-        string key = string.Concat(((keyword ?? "") + alphabet).ToUpper().Replace("J", "I").Distinct());
+        string key = string.Concat(((keyword ?? "") + alphabet).ToUpperInvariant().Replace("J", "I").Distinct());
 
         int index = 0;
         for (int r = 0; r < 5; r++)
@@ -50,9 +50,9 @@ public static class TwoSquareCipher
     private static string PrepareText(string text)
     {
         StringBuilder prepared = new();
-        foreach (char c in (text ?? "").ToUpper())
+        foreach (char c in (text ?? "").ToUpperInvariant())
         {
-            if (char.IsLetter(c)) prepared.Append(c == 'J' ? 'I' : c);
+            if (char.IsAsciiLetter(c)) prepared.Append(c == 'J' ? 'I' : c);
         }
 
         if (prepared.Length % 2 != 0) prepared.Append('X');

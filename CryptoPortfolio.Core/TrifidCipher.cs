@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -31,7 +31,7 @@ public static class TrifidCipher
     /// <summary>Builds the 27-character keyed alphabet laid out across the cube.</summary>
     private static string BuildAlphabet(string keyword)
     {
-        string key = string.Concat((keyword ?? "").ToUpper().Where(char.IsLetter).Distinct());
+        string key = string.Concat((keyword ?? "").ToUpperInvariant().Where(char.IsAsciiLetter).Distinct());
         return string.Concat((key + BaseAlphabet).Distinct()) + Padding;
     }
 
@@ -40,7 +40,7 @@ public static class TrifidCipher
         if (period < 1) return "Error: Period must be at least 1.";
 
         string alphabet = BuildAlphabet(keyword);
-        string text = new((plainText ?? "").ToUpper().Where(char.IsLetter).ToArray());
+        string text = new((plainText ?? "").ToUpperInvariant().Where(char.IsAsciiLetter).ToArray());
         if (text.Length == 0) return "";
 
         StringBuilder result = new();
@@ -80,7 +80,7 @@ public static class TrifidCipher
         if (period < 1) return "Error: Period must be at least 1.";
 
         string alphabet = BuildAlphabet(keyword);
-        string text = new((cipherText ?? "").ToUpper().Where(c => alphabet.Contains(c)).ToArray());
+        string text = new((cipherText ?? "").ToUpperInvariant().Where(c => alphabet.Contains(c)).ToArray());
         if (text.Length == 0) return "";
 
         StringBuilder result = new();

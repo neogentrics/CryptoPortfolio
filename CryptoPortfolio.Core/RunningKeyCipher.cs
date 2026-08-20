@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 
 /// <summary>
@@ -23,10 +23,10 @@ public static class RunningKeyCipher
 {
     private static string Shift(string text, string runningKey, int direction)
     {
-        string key = new((runningKey ?? "").ToUpper().Where(char.IsLetter).ToArray());
+        string key = new((runningKey ?? "").ToUpperInvariant().Where(char.IsAsciiLetter).ToArray());
         if (key.Length == 0) return "Error: Running key must contain at least one letter.";
 
-        int required = (text ?? "").Count(char.IsLetter);
+        int required = (text ?? "").Count(char.IsAsciiLetter);
         if (key.Length < required)
         {
             return $"Error: Running key is too short. Need {required} letters, have {key.Length}.";
@@ -37,13 +37,13 @@ public static class RunningKeyCipher
 
         foreach (char c in text ?? "")
         {
-            if (!char.IsLetter(c))
+            if (!char.IsAsciiLetter(c))
             {
                 result.Append(c);
                 continue;
             }
 
-            char baseChar = char.IsUpper(c) ? 'A' : 'a';
+            char baseChar = char.IsAsciiLetterUpper(c) ? 'A' : 'a';
             int k = (key[keyIndex] - 'A') * direction;
 
             result.Append((char)(baseChar + ((c - baseChar + k) % 26 + 26) % 26));

@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 
 /// <summary>
@@ -21,11 +21,11 @@ public static class AutokeyCipher
 {
     public static string Encrypt(string plainText, string keyword)
     {
-        string primer = new((keyword ?? "").ToUpper().Where(char.IsLetter).ToArray());
+        string primer = new((keyword ?? "").ToUpperInvariant().Where(char.IsAsciiLetter).ToArray());
         if (primer.Length == 0) return "Error: Keyword must contain at least one letter.";
 
         // The running key is the primer followed by the plaintext letters themselves.
-        string letters = new((plainText ?? "").ToUpper().Where(char.IsLetter).ToArray());
+        string letters = new((plainText ?? "").ToUpperInvariant().Where(char.IsAsciiLetter).ToArray());
         string key = primer + letters;
 
         StringBuilder result = new();
@@ -33,13 +33,13 @@ public static class AutokeyCipher
 
         foreach (char c in plainText ?? "")
         {
-            if (!char.IsLetter(c))
+            if (!char.IsAsciiLetter(c))
             {
                 result.Append(c);
                 continue;
             }
 
-            char baseChar = char.IsUpper(c) ? 'A' : 'a';
+            char baseChar = char.IsAsciiLetterUpper(c) ? 'A' : 'a';
             int k = key[index] - 'A';
 
             result.Append((char)(baseChar + (c - baseChar + k) % 26));
@@ -51,7 +51,7 @@ public static class AutokeyCipher
 
     public static string Decrypt(string cipherText, string keyword)
     {
-        string primer = new((keyword ?? "").ToUpper().Where(char.IsLetter).ToArray());
+        string primer = new((keyword ?? "").ToUpperInvariant().Where(char.IsAsciiLetter).ToArray());
         if (primer.Length == 0) return "Error: Keyword must contain at least one letter.";
 
         StringBuilder result = new();
@@ -61,13 +61,13 @@ public static class AutokeyCipher
 
         foreach (char c in cipherText ?? "")
         {
-            if (!char.IsLetter(c))
+            if (!char.IsAsciiLetter(c))
             {
                 result.Append(c);
                 continue;
             }
 
-            char baseChar = char.IsUpper(c) ? 'A' : 'a';
+            char baseChar = char.IsAsciiLetterUpper(c) ? 'A' : 'a';
             int k = key[index] - 'A';
             int p = ((c - baseChar - k) % 26 + 26) % 26;
 

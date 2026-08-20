@@ -32,7 +32,7 @@ public static class PlayfairCipher
         char[,] table = new char[5, 5];
         Dictionary<char, Point> positions = new();
 
-        string key = string.Concat(keyword.ToUpper().Replace("J", "I").Distinct());
+        string key = string.Concat(keyword.ToUpperInvariant().Replace("J", "I").Distinct());
         string alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
         string keyString = key + string.Concat(alphabet.Except(key));
 
@@ -53,11 +53,11 @@ public static class PlayfairCipher
     private static string PrepareText(string text)
     {
         StringBuilder preparedText = new StringBuilder();
-        text = text.ToUpper().Replace("J", "I");
+        text = text.ToUpperInvariant().Replace("J", "I");
 
         for (int i = 0; i < text.Length; i++)
         {
-            if (!char.IsLetter(text[i])) continue;
+            if (!char.IsAsciiLetter(text[i])) continue;
 
             preparedText.Append(text[i]);
             if (i + 1 < text.Length && text[i] == text[i + 1])
@@ -114,6 +114,6 @@ public static class PlayfairCipher
     {
         var (table, positions) = GenerateKeyTable(keyword);
         // Decryption doesn't need text preparation
-        return ProcessDigraphs(cipherText.ToUpper(), -1, table, positions); // -1 for decryption (move left/up)
+        return ProcessDigraphs(cipherText.ToUpperInvariant(), -1, table, positions); // -1 for decryption (move left/up)
     }
 }

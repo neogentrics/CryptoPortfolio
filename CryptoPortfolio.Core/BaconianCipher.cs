@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 
 /// <summary>
@@ -37,8 +37,8 @@ public static class BaconianCipher
 
     public static string Encrypt(string plainText)
     {
-        var groups = (plainText ?? "").ToUpper()
-            .Where(char.IsLetter)
+        var groups = (plainText ?? "").ToUpperInvariant()
+            .Where(char.IsAsciiLetter)
             .Select(c => Encode(c - 'A'));
 
         return string.Join(" ", groups);
@@ -47,7 +47,7 @@ public static class BaconianCipher
     public static string Decrypt(string cipherText)
     {
         // Accept the groups with or without spaces; only A and B carry meaning.
-        string symbols = new((cipherText ?? "").ToUpper().Where(c => c == 'A' || c == 'B').ToArray());
+        string symbols = new((cipherText ?? "").ToUpperInvariant().Where(c => c == 'A' || c == 'B').ToArray());
 
         StringBuilder result = new();
         for (int i = 0; i + GroupSize <= symbols.Length; i += GroupSize)

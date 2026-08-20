@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -33,7 +33,7 @@ public static class BifidCipher
         Dictionary<char, Point> positions = new();
 
         string alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ"; // Omitting J
-        string key = string.Concat((keyword + alphabet).ToUpper().Replace("J", "").Distinct());
+        string key = string.Concat((keyword + alphabet).ToUpperInvariant().Replace("J", "").Distinct());
 
         int index = 0;
         for (int r = 0; r < 5; r++)
@@ -55,7 +55,7 @@ public static class BifidCipher
 
         // NOTE: Where() yields an IEnumerable<char>; calling ToString() on it returns the
         // LINQ iterator's type name, not the text. Materialise it with new string(...).
-        plainText = new string(plainText.ToUpper().Replace("J", "I").Where(char.IsLetter).ToArray());
+        plainText = new string(plainText.ToUpperInvariant().Replace("J", "I").Where(char.IsAsciiLetter).ToArray());
 
         // 1. Fractionation: Get all row and column coordinates
         var rows = new StringBuilder();
@@ -88,7 +88,7 @@ public static class BifidCipher
     {
         var (table, positions) = GenerateKeyTable(keyword);
 
-        cipherText = new string(cipherText.ToUpper().Where(char.IsLetter).ToArray());
+        cipherText = new string(cipherText.ToUpperInvariant().Where(char.IsAsciiLetter).ToArray());
 
         // 1. Fractionation: Convert ciphertext to a long string of coordinates
         var combinedCoords = new StringBuilder();

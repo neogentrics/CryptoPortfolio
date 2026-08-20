@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -28,14 +28,14 @@ public static class MyszkowskiCipher
     /// </summary>
     private static int[] RankKey(string keyword)
     {
-        string key = keyword.ToUpper();
+        string key = keyword.ToUpperInvariant();
         var distinctSorted = key.Distinct().OrderBy(c => c).ToList();
         return key.Select(c => distinctSorted.IndexOf(c)).ToArray();
     }
 
     public static string Encrypt(string plainText, string keyword)
     {
-        string key = new((keyword ?? "").ToUpper().Where(char.IsLetter).ToArray());
+        string key = new((keyword ?? "").ToUpperInvariant().Where(char.IsAsciiLetter).ToArray());
         if (key.Length == 0) return "Error: Keyword must contain at least one letter.";
 
         string text = plainText ?? "";
@@ -68,7 +68,7 @@ public static class MyszkowskiCipher
 
     public static string Decrypt(string cipherText, string keyword)
     {
-        string key = new((keyword ?? "").ToUpper().Where(char.IsLetter).ToArray());
+        string key = new((keyword ?? "").ToUpperInvariant().Where(char.IsAsciiLetter).ToArray());
         if (key.Length == 0) return "Error: Keyword must contain at least one letter.";
 
         string text = cipherText ?? "";

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -29,7 +29,7 @@ public static class NihilistCipher
         Dictionary<char, Point> positions = new();
 
         string alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ"; // Omitting J
-        string key = string.Concat(((keyword ?? "") + alphabet).ToUpper().Replace("J", "I").Distinct());
+        string key = string.Concat(((keyword ?? "") + alphabet).ToUpperInvariant().Replace("J", "I").Distinct());
 
         int index = 0;
         for (int r = 0; r < 5; r++)
@@ -52,12 +52,12 @@ public static class NihilistCipher
     {
         var (_, positions) = GenerateSquare(squareKeyword);
 
-        string additive = new((additiveKeyword ?? "").ToUpper().Replace("J", "I").Where(char.IsLetter).ToArray());
+        string additive = new((additiveKeyword ?? "").ToUpperInvariant().Replace("J", "I").Where(char.IsAsciiLetter).ToArray());
         if (additive.Length == 0) return "Error: Additive keyword must contain at least one letter.";
 
         var additiveNumbers = additive.Select(c => ToNumber(positions[c])).ToList();
 
-        string text = new((plainText ?? "").ToUpper().Replace("J", "I").Where(char.IsLetter).ToArray());
+        string text = new((plainText ?? "").ToUpperInvariant().Replace("J", "I").Where(char.IsAsciiLetter).ToArray());
         List<string> output = new();
 
         for (int i = 0; i < text.Length; i++)
@@ -73,7 +73,7 @@ public static class NihilistCipher
     {
         var (grid, positions) = GenerateSquare(squareKeyword);
 
-        string additive = new((additiveKeyword ?? "").ToUpper().Replace("J", "I").Where(char.IsLetter).ToArray());
+        string additive = new((additiveKeyword ?? "").ToUpperInvariant().Replace("J", "I").Where(char.IsAsciiLetter).ToArray());
         if (additive.Length == 0) return "Error: Additive keyword must contain at least one letter.";
 
         var additiveNumbers = additive.Select(c => ToNumber(positions[c])).ToList();

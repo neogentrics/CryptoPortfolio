@@ -24,9 +24,9 @@ public static class VigenereCipher
         StringBuilder cleanedKey = new StringBuilder();
         foreach (char c in key)
         {
-            if (char.IsLetter(c))
+            if (char.IsAsciiLetter(c))
             {
-                cleanedKey.Append(char.ToUpper(c));
+                cleanedKey.Append(char.ToUpperInvariant(c));
             }
         }
         return cleanedKey.ToString();
@@ -48,9 +48,9 @@ public static class VigenereCipher
 
         foreach (char character in plainText)
         {
-            if (char.IsLetter(character))
+            if (char.IsAsciiLetter(character))
             {
-                char alphabetBase = char.IsUpper(character) ? 'A' : 'a';
+                char alphabetBase = char.IsAsciiLetterUpper(character) ? 'A' : 'a';
                 int plainTextOffset = character - alphabetBase;
 
                 // Get the shift amount from the current key character
@@ -88,9 +88,9 @@ public static class VigenereCipher
 
         foreach (char character in cipherText)
         {
-            if (char.IsLetter(character))
+            if (char.IsAsciiLetter(character))
             {
-                char alphabetBase = char.IsUpper(character) ? 'A' : 'a';
+                char alphabetBase = char.IsAsciiLetterUpper(character) ? 'A' : 'a';
                 int cipherOffset = character - alphabetBase;
 
                 // Get the shift amount from the current key character

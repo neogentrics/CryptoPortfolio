@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 
 /// <summary>
@@ -28,13 +28,13 @@ public static class GronsfeldCipher
 
         foreach (char c in text ?? "")
         {
-            if (!char.IsLetter(c))
+            if (!char.IsAsciiLetter(c))
             {
                 result.Append(c);
                 continue;
             }
 
-            char baseChar = char.IsUpper(c) ? 'A' : 'a';
+            char baseChar = char.IsAsciiLetterUpper(c) ? 'A' : 'a';
             int shift = (key[keyIndex % key.Length] - '0') * direction;
 
             result.Append((char)(baseChar + ((c - baseChar + shift) % 26 + 26) % 26));
