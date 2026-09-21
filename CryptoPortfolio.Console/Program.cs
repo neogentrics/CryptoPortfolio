@@ -135,6 +135,14 @@ public class Program
             }
 
             Console.WriteLine("\nPress any key to return to the main menu...");
+
+            // Console.ReadKey() throws when input is redirected (piped input, a script,
+            // or a CI run) rather than an interactive terminal — there is no key to read.
+            // Ending the run after one operation is the correct behaviour for a
+            // non-interactive invocation; looping back to the menu would just spin,
+            // since redirected input that has run out returns an empty line forever.
+            if (Console.IsInputRedirected) return;
+
             Console.ReadKey();
             Console.Clear();
         }
