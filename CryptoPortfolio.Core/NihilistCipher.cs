@@ -17,9 +17,12 @@ using System.Text;
 /// letter into a two-digit coordinate. Second, a repeating additive: those numbers are added to
 /// the numbers of a keyword, cycling as needed. The result is a numeric ciphertext.
 ///
-/// The addition is performed WITHOUT carrying between positions, which is what keeps it
-/// invertible. Because the additive key repeats, the cipher inherits Vigenere's periodicity and
-/// falls to the same attack - find the key length, then treat each position independently.
+/// The addition is ordinary arithmetic addition (with carrying) of the two-digit coordinate
+/// numbers - not the digit-wise, non-carrying "false addition" used elsewhere in field ciphers
+/// like the VIC cipher's checkerboard stage. Carrying or not has no bearing on invertibility
+/// either way; subtraction reverses addition regardless. Because the additive key repeats, the
+/// cipher inherits Vigenere's periodicity and falls to the same attack - find the key length,
+/// then treat each position independently.
 /// </summary>
 public static class NihilistCipher
 {
