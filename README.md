@@ -19,6 +19,7 @@ This project is a comprehensive, interactive C#/.NET console application designe
 * **Machine Ciphers & Key Exchange:** WWII Enigma Machine (M3 Army model), verified against the historical Enigma I test vectors; Diffie-Hellman Key Exchange.
 * **Encodings:** Morse Code, Base64. Included deliberately — both are routinely mistaken for encryption, and telling an encoding from a cipher matters in real security work.
 * **Custom Layered System:** The **Aegis Cipher**, which derives every sub-key from a single master keyword and chains ten classical layers.
+* **Universal Decrypt:** Every other tool here demos a *known* cipher with a *known* key. This one assumes neither — give it ciphertext and a single codeword, and it runs that codeword through all 35 applicable ciphers (reshaping it into two keywords, or a number, wherever a cipher needs a different key shape), so you can scan the results for whichever one reads as real text.
 * **Cipher History Viewer:** An interactive menu to read about the origin and purpose of each implemented algorithm.
 
 ---
@@ -62,7 +63,7 @@ dotnet run --project CryptoPortfolio.Console
 dotnet test
 ```
 
-**177 tests.** The suite covers round-trip correctness for every cipher, published test vectors
+**190 tests.** The suite covers round-trip correctness for every cipher, published test vectors
 (Enigma I, Affine, Autokey, Myszkowski, Base64, Morse), Hill key invertibility, thread safety of
 the keyed-square ciphers, structural properties such as Porta's half-alphabet swap and Trifid's
 diffusion, and Unicode/culture invariance (non-ASCII letters pass through untouched; output is
@@ -106,6 +107,7 @@ This project is developed in phases. Here is the current status:
 * **[x]** Include Morse and Base64 as explicitly labelled *encodings*, to make the encoding/encryption distinction concrete.
 * **[x]** Harden every cipher against Unicode and locale-dependent text handling (`char.IsAsciiLetter`, invariant casing), after non-ASCII letters and Turkish/Azeri locales were found to silently corrupt several ciphers.
 * **[x]** Fix a real data-corruption bug in Double Columnar Transposition, where chaining two passes let one pass's padding-stripping heuristic silently truncate the other's legitimate output.
+* **[x]** Add **Universal Decrypt**: the first identification tool, trying one codeword against all 35 applicable ciphers so unknown ciphertext can be scanned for a plausible plaintext instead of requiring the cipher to already be known.
 
 ### ⏳ Phase 3: Bridge to Modernity (Up Next)
 * **[ ]** Implement a **Simplified AES** (Block Cipher) to understand Substitution-Permutation Networks.

@@ -60,9 +60,12 @@ public class Program
             Console.WriteLine("\n--- Custom Systems ---");
             Console.WriteLine("38. Aegis Cipher (Layered System)");
 
+            Console.WriteLine("\n--- Identification ---");
+            Console.WriteLine("39. Try All Ciphers (Universal Decrypt)");
+
             Console.WriteLine("\n--- Utilities ---");
-            Console.WriteLine("39. View Cipher History");
-            Console.WriteLine("40. Exit");
+            Console.WriteLine("40. View Cipher History");
+            Console.WriteLine("41. Exit");
             Console.Write("\nEnter your choice: ");
 
             string choice = InputHelpers.GetStringKey("");
@@ -121,9 +124,12 @@ public class Program
                 // Custom systems
                 case "38": MenuRunners.RunAegisCipher(); break;
 
+                // Identification
+                case "39": MenuRunners.RunUniversalDecrypt(); break;
+
                 // Utilities
-                case "39": MenuRunners.ShowCipherHistory(); break;
-                case "40": Console.WriteLine("Exiting program. Goodbye!"); return;
+                case "40": MenuRunners.ShowCipherHistory(); break;
+                case "41": Console.WriteLine("Exiting program. Goodbye!"); return;
 
                 default: Console.WriteLine("Invalid choice."); break;
             }
