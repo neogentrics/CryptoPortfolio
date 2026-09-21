@@ -2,6 +2,10 @@
 
 Newest first. Each entry is what actually shipped, not what was planned.
 
+## v1.3.1
+
+Fixed a crash when input is redirected instead of interactive. `Console.ReadKey()` throws when stdin is piped or scripted rather than a live terminal, which every menu operation hit the moment it tried to loop back to the main menu. The program now ends cleanly after one operation when input is redirected, instead of crashing or spinning.
+
 ## v1.3.0
 
 Added Universal Decrypt: the first identification tool. Every other option in the app demos a known cipher with a known key; this one takes ciphertext of unknown origin and a single codeword, runs it through all 35 applicable ciphers, and shows every result so the correct one can be picked out by eye.
