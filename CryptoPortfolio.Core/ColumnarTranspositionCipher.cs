@@ -58,6 +58,25 @@ public static class ColumnarTranspositionCipher
 
     public static string Decrypt(string cipherText, string keyword)
     {
+        string result = DecryptRaw(cipherText, keyword);
+        return result.StartsWith("Error:") ? result : result.TrimEnd(); // Trim trailing padding spaces
+    }
+
+    /// <summary>
+    /// Decrypts without trimming trailing padding. Used by callers such as
+    /// <see cref="DoubleColumnarCipher"/> that pre-pad their own input to an exact multiple of
+    /// the column count, so no padding is ever added internally and the reconstructed grid is
+    /// already exact.
+    ///
+    /// The public <see cref="Decrypt"/> strips trailing whitespace with TrimEnd as a heuristic,
+    /// which is safe for a single, standalone pass but breaks when this cipher is chained:
+    /// intermediate ciphertext can legitimately end in a space that is not padding at all, and
+    /// TrimEnd cannot tell the difference. Composing two passes through the public Decrypt
+    /// silently truncated real data whenever the first pass's own padding happened to land at
+    /// the very end of its output and the second pass added none of its own.
+    /// </summary>
+    internal static string DecryptRaw(string cipherText, string keyword)
+    {
         keyword = string.Concat(keyword.ToUpperInvariant().Distinct());
         if (string.IsNullOrEmpty(keyword)) return cipherText;
 
@@ -105,6 +124,6 @@ public static class ColumnarTranspositionCipher
             }
         }
 
-        return plainText.ToString().TrimEnd(); // Trim trailing padding spaces
+        return plainText.ToString();
     }
 }

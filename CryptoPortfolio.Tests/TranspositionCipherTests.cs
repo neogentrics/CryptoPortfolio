@@ -1,4 +1,4 @@
-using Xunit;
+﻿using Xunit;
 
 namespace CryptoPortfolio.Tests;
 
@@ -104,12 +104,40 @@ public class TranspositionCipherTests
     // ---------- Double Columnar ----------
 
     [Fact]
-    public void DoubleColumnarRoundTrips()
+    public void DoubleColumnarRoundTrips() =>
+        Assert.Equal(Message, DoubleColumnarCipher.Decrypt(
+            DoubleColumnarCipher.Encrypt(Message, "ZEBRAS", "FORTRESS"), "ZEBRAS", "FORTRESS"));
+
+    /// <summary>
+    /// Regression test for a real corruption bug: ColumnarTranspositionCipher.Decrypt strips
+    /// trailing padding with a TrimEnd heuristic, which is safe for a single pass but not when
+    /// chained — the first pass's ciphertext can legitimately end in a space that isn't padding,
+    /// and the second pass's decrypt can't tell the difference. With key1="ABC" (an
+    /// already-alphabetical keyword) and a 4-letter message, the first pass's own padding lands
+    /// on the last-read column, so its ciphertext ends in a space; the second pass ("XY") needs
+    /// no padding of its own, so TrimEnd stripped that real character and corrupted the message.
+    /// Fixed by pre-padding once to a common multiple of both key lengths, so neither internal
+    /// pass ever invents its own padding.
+    /// </summary>
+    [Fact]
+    public void DoubleColumnarDoesNotCorruptWhenFirstPassEndsInASpace() =>
+        Assert.Equal("TEST", DoubleColumnarCipher.Decrypt(DoubleColumnarCipher.Encrypt("TEST", "ABC", "XY"), "ABC", "XY"));
+
+    [Theory]
+    [InlineData("ABC", "XY")]
+    [InlineData("KEY", "FORTRESS")]
+    [InlineData("KEYBOARD", "A")]
+    [InlineData("ZEBRAS", "CIPHER")]
+    public void DoubleColumnarRoundTripsAcrossKeyLengths(string key1, string key2)
     {
-        string back = DoubleColumnarCipher.Decrypt(
-            DoubleColumnarCipher.Encrypt(Message, "ZEBRAS", "FORTRESS"), "ZEBRAS", "FORTRESS");
-        Assert.Equal(Message, back.TrimEnd());
+        const string message = "MEET ME AT THE BRIDGE AT DAWN";
+        Assert.Equal(message, DoubleColumnarCipher.Decrypt(
+            DoubleColumnarCipher.Encrypt(message, key1, key2), key1, key2));
     }
+
+    [Fact]
+    public void DoubleColumnarRejectsEmptyKeyword() =>
+        Assert.StartsWith("Error:", DoubleColumnarCipher.Encrypt(Message, "", "FORTRESS"));
 
     /// <summary>Two different keys must not collapse into a single transposition.</summary>
     [Fact]
@@ -117,8 +145,19 @@ public class TranspositionCipherTests
         Assert.NotEqual(ColumnarTranspositionCipher.Encrypt(Message, "ZEBRAS"),
                         DoubleColumnarCipher.Encrypt(Message, "ZEBRAS", "FORTRESS"));
 
+    /// <summary>
+    /// Transposition is a pure permutation: the ciphertext's letter multiset must equal the
+    /// padded plaintext's. The 'X' padding this cipher adds gets scattered by both transposition
+    /// passes rather than staying at the tail, so it is computed explicitly here instead of
+    /// trimmed off the ciphertext.
+    /// </summary>
     [Fact]
-    public void DoubleColumnarPreservesLetters() =>
-        Assert.Equal(Sorted(Message),
-            Sorted(DoubleColumnarCipher.Encrypt(Message, "ZEBRAS", "FORTRESS").Replace(" ", "")));
+    public void DoubleColumnarPreservesLetters()
+    {
+        const int blockSize = 6; // lcm of ZEBRAS's and FORTRESS's distinct-letter counts (6, 6)
+        int padCount = (blockSize - Message.Length % blockSize) % blockSize;
+        string padded = Message + new string('X', padCount);
+
+        Assert.Equal(Sorted(padded), Sorted(DoubleColumnarCipher.Encrypt(Message, "ZEBRAS", "FORTRESS")));
+    }
 }
