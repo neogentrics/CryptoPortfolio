@@ -62,10 +62,12 @@ dotnet run --project CryptoPortfolio.Console
 dotnet test
 ```
 
-The suite covers round-trip correctness for every cipher, published test vectors (Enigma I,
-Affine, Autokey, Myszkowski, Base64, Morse), Hill key invertibility, thread safety of the
-keyed-square ciphers, and structural properties such as Porta's half-alphabet swap and Trifid's
-diffusion. Every entry in the catalogue is checked to have a history entry.
+**177 tests.** The suite covers round-trip correctness for every cipher, published test vectors
+(Enigma I, Affine, Autokey, Myszkowski, Base64, Morse), Hill key invertibility, thread safety of
+the keyed-square ciphers, structural properties such as Porta's half-alphabet swap and Trifid's
+diffusion, and Unicode/culture invariance (non-ASCII letters pass through untouched; output is
+identical under tr-TR, az-AZ, en-US and de-DE). Every entry in the catalogue is checked to have a
+history entry.
 
 ---
 
@@ -102,6 +104,8 @@ This project is developed in phases. Here is the current status:
 * **[x]** Extend the catalogue to 38 algorithms spanning every major classical family.
 * **[x]** Group the console menu by cipher family rather than one flat list.
 * **[x]** Include Morse and Base64 as explicitly labelled *encodings*, to make the encoding/encryption distinction concrete.
+* **[x]** Harden every cipher against Unicode and locale-dependent text handling (`char.IsAsciiLetter`, invariant casing), after non-ASCII letters and Turkish/Azeri locales were found to silently corrupt several ciphers.
+* **[x]** Fix a real data-corruption bug in Double Columnar Transposition, where chaining two passes let one pass's padding-stripping heuristic silently truncate the other's legitimate output.
 
 ### ⏳ Phase 3: Bridge to Modernity (Up Next)
 * **[ ]** Implement a **Simplified AES** (Block Cipher) to understand Substitution-Permutation Networks.
